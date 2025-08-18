@@ -153,4 +153,4 @@ This project is licensed under the Apache License 2.0 — see the [LICENSE](LICE
 
 ---
 
-*This guide is a general reference and not legal advice. For complex or high‑stakes situations, consult a lawyer.*
+*This guide is a general reference and not legal advice. For complex or high‑stakes situations, consult a lawyer.* (Created with ChatGPT_5_Pro)
