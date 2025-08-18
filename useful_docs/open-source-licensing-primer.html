@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Open‑Source Licensing Primer</title>
+  <meta name="description" content="A practical guide to open‑source licenses: what they are, common options on GitHub, and when/how to use them.">
+  <style>
+    :root{
+      --bg: #ffffff;
+      --fg: #1f2937;
+      --muted: #6b7280;
+      --accent: #2563eb;
+      --card: #f8fafc;
+      --border: #e5e7eb;
+      --code-bg: #0b1022;
+      --code-fg: #e5e7eb;
+      --kbd-bg: #f3f4f6;
+      --kbd-fg: #111827;
+    }
+    @media (prefers-color-scheme: dark){
+      :root{
+        --bg: #0b1022;
+        --fg: #e5e7eb;
+        --muted: #9ca3af;
+        --accent: #60a5fa;
+        --card: #11162a;
+        --border: #1f2937;
+        --code-bg: #0b1022;
+        --code-fg: #e5e7eb;
+        --kbd-bg: #1f2937;
+        --kbd-fg: #f9fafb;
+      }
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:var(--bg);color:var(--fg);font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Inter,Ubuntu,Cantarell,"Helvetica Neue",Arial,"Noto Sans",sans-serif}
+    a{color:var(--accent);text-decoration:none}
+    a:hover{text-decoration:underline}
+    .container{max-width:1000px;margin:0 auto;padding:32px 20px 64px}
+    header{margin-bottom:24px}
+    .title{font-size: clamp(1.8rem, 4vw, 2.4rem); line-height:1.2; margin:0 0 8px 0}
+    .subtitle{margin:0;color:var(--muted)}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px}
+    nav.toc{margin:24px 0}
+    nav.toc ul{list-style:none;padding-left:0;margin:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:6px}
+    nav.toc li a{display:block;padding:10px 12px;border:1px solid var(--border);border-radius:10px;background:var(--bg)}
+    h2{margin-top:36px;margin-bottom:12px;font-size: clamp(1.4rem, 3vw, 1.8rem)}
+    h3{margin-top:24px;margin-bottom:8px}
+    .callout{border-left:4px solid var(--accent);padding:12px 16px;background:var(--card);border-radius:8px;margin:16px 0}
+    code,kbd{font-family: ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas, "Liberation Mono","Courier New",monospace}
+    pre{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:10px;overflow:auto;position:relative;border:1px solid var(--border)}
+    pre code{color:inherit}
+    kbd{background:var(--kbd-bg);color:var(--kbd-fg);border-radius:6px;padding:2px 6px;border:1px solid var(--border);box-shadow: inset 0 -1px 0 rgba(0,0,0,.08)}
+    table{width:100%;border-collapse:separate;border-spacing:0;margin:12px 0;border:1px solid var(--border);border-radius:12px;overflow:hidden}
+    th,td{text-align:left;padding:12px;vertical-align:top;border-bottom:1px solid var(--border)}
+    thead th{background:var(--card)}
+    tr:last-child td{border-bottom:none}
+    .muted{color:var(--muted)}
+    .grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+    .searchbar{display:flex;gap:10px;align-items:center;margin:12px 0}
+    .searchbar input{flex:1;padding:10px 12px;border:1px solid var(--border);border-radius:10px;background:var(--bg);color:var(--fg)}
+    .pill{display:inline-block;padding:2px 8px;border:1px solid var(--border);border-radius:999px;background:var(--card);font-size:12px}
+    .copy-btn{position:absolute;top:10px;right:10px;padding:6px 10px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--fg);cursor:pointer}
+    .footnote{font-size:0.95rem;color:var(--muted)}
+    footer{margin-top:40px;color:var(--muted)}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1 class="title">Open‑Source Licensing Primer</h1>
+      <p class="subtitle">What licenses are, the most common options on GitHub, and when &amp; how to use them. <span class="pill">Last updated: Aug 18, 2025</span></p>
+    </header>
+
+    <div class="card">
+      <p><strong>Summary:</strong> An open‑source license is a permission set attached to your code that tells others what they may do (use, modify, redistribute), under what conditions (attribution, share‑alike), and with what limitations (e.g., no warranty). “Open source” follows the Open Source Initiative (OSI) definition—no field‑of‑use restrictions such as “non‑commercial” or “no AI use”.</p>
+    </div>
+
+    <nav class="toc" aria-label="Table of contents">
+      <ul>
+        <li><a href="#what-is">1) What is an open‑source license?</a></li>
+        <li><a href="#families">2) License families (the big picture)</a></li>
+        <li><a href="#common">3) Common GitHub licenses at a glance</a></li>
+        <li><a href="#choose">4) How to choose (quick decision guide)</a></li>
+        <li><a href="#add">5) How to add a license on GitHub</a></li>
+        <li><a href="#compat">6) Compatibility &amp; gotchas</a></li>
+        <li><a href="#recipes">7) Quick “recipes”</a></li>
+        <li><a href="#one-minute">8) “When &amp; how” in one minute</a></li>
+        <li><a href="#snippets">Appendix: useful snippets</a></li>
+      </ul>
+    </nav>
+
+    <section id="what-is">
+      <h2>1) What is an open‑source license?</h2>
+      <p>
+        An open‑source license grants permission to use, copy, modify, and redistribute your software. Each license spells out conditions (like attribution or share‑alike) and disclaimers (like “no warranty”). A project is considered “open source” when its license complies with the OSI’s criteria (free redistribution, access to source, no restrictions on fields of endeavor, etc.).
+      </p>
+      <div class="callout">
+        <strong>Not open source:</strong> Licenses with restrictions like “non‑commercial,” “no military use,” or “no AI use” are <em>source‑available</em> but not OSI‑approved open source.
+      </div>
+    </section>
+
+    <section id="families">
+      <h2>2) License families (the big picture)</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>Permissive</h3>
+          <p>Very few conditions; allow proprietary reuse.</p>
+          <p class="muted">Examples: <strong>MIT</strong>, <strong>Apache‑2.0</strong>, <strong>BSD‑2‑Clause</strong>, <strong>BSD‑3‑Clause</strong>.</p>
+        </div>
+        <div class="card">
+          <h3>Weak copyleft</h3>
+          <p>Share‑alike applies to specific files/libraries, not the entire combined work.</p>
+          <p class="muted">Examples: <strong>MPL‑2.0</strong> (file‑level), <strong>LGPL‑3.0</strong> (library‑level).</p>
+        </div>
+        <div class="card">
+          <h3>Strong copyleft</h3>
+          <p>Share‑alike applies to the whole combined work; AGPL includes network use.</p>
+          <p class="muted">Examples: <strong>GPL‑3.0</strong>, <strong>AGPL‑3.0</strong>.</p>
+        </div>
+        <div class="card">
+          <h3>Public‑domain equivalents</h3>
+          <p>No conditions; maximize reuse (commonly for data/snippets).</p>
+          <p class="muted">Examples: <strong>Unlicense</strong>, <strong>CC0‑1.0</strong> (better for data/assets than code).</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="common">
+      <h2>3) Common GitHub licenses at a glance</h2>
+
+      <div class="searchbar">
+        <input id="filter" type="search" placeholder="Filter by license, type, or keywords (e.g., patent, copyleft, SaaS)…" aria-label="Filter licenses">
+        <kbd>Ctrl</kbd> + <kbd>F</kbd> also works
+      </div>
+
+      <table id="license-table" aria-describedby="table-help">
+        <thead>
+          <tr>
+            <th>License (SPDX)</th>
+            <th>Type</th>
+            <th>What it requires</th>
+            <th>Good when you want…</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>MIT</strong></td>
+            <td>Permissive</td>
+            <td>Preserve copyright &amp; license notice.</td>
+            <td>Max adoption with minimal friction.</td>
+            <td>No explicit patent grant (often treated as implied).</td>
+          </tr>
+          <tr>
+            <td><strong>Apache‑2.0</strong></td>
+            <td>Permissive</td>
+            <td>Preserve notices; include <code>NOTICE</code> if used; state changes.</td>
+            <td>Permissive use with explicit patent grant &amp; patent retaliation.</td>
+            <td>Corporate‑friendly due to clear patent terms.</td>
+          </tr>
+          <tr>
+            <td><strong>BSD‑2‑Clause</strong></td>
+            <td>Permissive</td>
+            <td>Preserve copyright &amp; license notice.</td>
+            <td>MIT‑like with tiny differences.</td>
+            <td>Very close to MIT in practice.</td>
+          </tr>
+          <tr>
+            <td><strong>BSD‑3‑Clause</strong></td>
+            <td>Permissive</td>
+            <td>Same as BSD‑2; adds “no endorsement” clause.</td>
+            <td>MIT‑like with explicit non‑endorsement.</td>
+            <td>Common in academia/industry.</td>
+          </tr>
+          <tr>
+            <td><strong>MPL‑2.0</strong></td>
+            <td>Weak copyleft (file‑level)</td>
+            <td>Share source of <em>modified files</em>.</td>
+            <td>Keep changes to specific files open while allowing larger proprietary combinations.</td>
+            <td>Practical for plugins/extensions.</td>
+          </tr>
+          <tr>
+            <td><strong>LGPL‑3.0</strong></td>
+            <td>Weak copyleft (library)</td>
+            <td>Share changes to the library; dynamic linking allowed.</td>
+            <td>Libraries you want used broadly, but improved versions remain open.</td>
+            <td>Linking details matter; read carefully.</td>
+          </tr>
+          <tr>
+            <td><strong>GPL‑3.0</strong></td>
+            <td>Strong copyleft</td>
+            <td>Share source of the whole combined work when distributed.</td>
+            <td>Ensure derivatives remain open.</td>
+            <td>Compatible with Apache‑2.0.</td>
+          </tr>
+          <tr>
+            <td><strong>AGPL‑3.0</strong></td>
+            <td>Strong copyleft (network)</td>
+            <td>If users interact with your modified software over a network, offer the source.</td>
+            <td>Close the “SaaS”/network use loophole.</td>
+            <td>Common for server‑side apps and web services.</td>
+          </tr>
+          <tr>
+            <td><strong>Unlicense</strong></td>
+            <td>Public‑domain‑equivalent</td>
+            <td>No conditions.</td>
+            <td>Put code fully in the public domain.</td>
+            <td>CC0 is often preferred for non‑code assets.</td>
+          </tr>
+          <tr>
+            <td><strong>CC0‑1.0</strong></td>
+            <td>Public‑domain‑equivalent</td>
+            <td>No conditions.</td>
+            <td>Datasets, examples, small snippets.</td>
+            <td>Not recommended for software code; great for data.</td>
+          </tr>
+        </tbody>
+      </table>
+      <p id="table-help" class="muted">Tip: These are the licenses you’ll most commonly see and can easily add via GitHub’s license template picker.</p>
+    </section>
+
+    <section id="choose">
+      <h2>4) How to choose (quick decision guide)</h2>
+      <ol>
+        <li><strong>Lowest barrier to use?</strong> → <em>MIT</em> or <em>BSD</em>. If patents are a concern (e.g., AI, crypto, networking), choose <em>Apache‑2.0</em> for its explicit patent grant.</li>
+        <li><strong>Want improvements to stay open (apps/tools)?</strong> → <em>GPL‑3.0</em>. If the software will run as a web service and you want modified server code shared, pick <em>AGPL‑3.0</em>.</li>
+        <li><strong>Publishing a reusable library but don’t want to “GPL” everything that links to it?</strong> → <em>LGPL‑3.0</em> (users can link proprietary code; changes to the library itself must be open).</li>
+        <li><strong>Want share‑alike only for files you change, not the entire repo?</strong> → <em>MPL‑2.0</em> (file‑level copyleft).</li>
+        <li><strong>Data, pretrained weights, or examples</strong> you want maximally reusable → <em>CC0‑1.0</em> (or <em>CC BY 4.0</em> if attribution is required; note CC licenses are for content, not code).</li>
+      </ol>
+    </section>
+
+    <section id="add">
+      <h2>5) How to add a license on GitHub</h2>
+      <h3>Via the web UI</h3>
+      <ol>
+        <li>Open your repository → <strong>Add file ▸ Create new file</strong> → name it <code>LICENSE</code> (or <code>LICENSE.md</code>).</li>
+        <li>Click <strong>Choose a license template</strong>, pick one, review, then <strong>Commit changes</strong>.</li>
+      </ol>
+      <h3>Best practices</h3>
+      <ul>
+        <li>Put the full license text in <code>LICENSE</code>. <em>Apache‑2.0</em> may also use a <code>NOTICE</code> file if you have notices to carry forward.</li>
+        <li>Add an SPDX header at the top of source files (see snippets below).</li>
+        <li>Document the license in your <code>README</code> (“Licensed under …”).</li>
+        <li>For contributions, consider a <em>DCO</em> (Developer Certificate of Origin, sign‑offs) or a <em>CLA</em> if your organization requires it.</li>
+      </ul>
+    </section>
+
+    <section id="compat">
+      <h2>6) Compatibility &amp; common gotchas</h2>
+      <ul>
+        <li><strong>GPL compatibility:</strong> Apache‑2.0 code can be included in GPLv3 projects (but not GPLv2‑only).</li>
+        <li><strong>Linking to GPL:</strong> If you link your code with GPL components and distribute the result, you likely must license the whole combined work under the GPL (details are nuanced).</li>
+        <li><strong>Attribution &amp; notices:</strong> MIT/BSD require preserving copyright &amp; license text; Apache‑2.0 also has NOTICE/attribution requirements.</li>
+        <li><strong>Patents:</strong> Apache‑2.0 grants explicit patent rights from contributors; MIT/BSD do not explicitly do so. In patent‑sensitive areas, Apache‑2.0 is often safer.</li>
+      </ul>
+    </section>
+
+    <section id="recipes">
+      <h2>7) Quick “recipes” for typical scenarios</h2>
+      <ul>
+        <li><strong>Research code / prototypes you want widely reused:</strong> <em>MIT</em> (or <em>Apache‑2.0</em> if you want explicit patent terms).</li>
+        <li><strong>Library intended for broad adoption but you want improvements to the library open:</strong> <em>LGPL‑3.0</em>.</li>
+        <li><strong>End‑user app/tool where you want derivatives to stay open:</strong> <em>GPL‑3.0</em>.</li>
+        <li><strong>Server software where you don’t want private SaaS forks:</strong> <em>AGPL‑3.0</em>.</li>
+        <li><strong>Datasets / examples / small snippets:</strong> <em>CC0‑1.0</em> (or CC BY 4.0 if you require attribution).</li>
+      </ul>
+    </section>
+
+    <section id="one-minute">
+      <h2>8) “When &amp; how” in one minute</h2>
+      <ol>
+        <li><strong>Decide your goal</strong> (adoption vs. reciprocity vs. patents vs. network/SaaS use).</li>
+        <li><strong>Pick a license</strong> from the table that matches that goal.</li>
+        <li><strong>Add <code>LICENSE</code></strong> (and <code>NOTICE</code> if Apache‑2.0) in your repo + optional SPDX headers in files.</li>
+        <li><strong>Document it</strong> in your README.</li>
+        <li><strong>For contributions</strong>, choose DCO or CLA as needed.</li>
+      </ol>
+    </section>
+
+    <section id="snippets">
+      <h2>Appendix: useful snippets</h2>
+
+      <h3>1) SPDX headers (copy into the first line of your source files)</h3>
+      <div class="muted">Pick the license you chose; match the comment style to the language.</div>
+
+      <pre><button class="copy-btn" data-target="spdx1">Copy</button><code id="spdx1">
+// SPDX-License-Identifier: Apache-2.0
+      </code></pre>
+
+      <pre><button class="copy-btn" data-target="spdx2">Copy</button><code id="spdx2">
+# SPDX-License-Identifier: MIT
+      </code></pre>
+
+      <pre><button class="copy-btn" data-target="spdx3">Copy</button><code id="spdx3">
+<!-- SPDX-License-Identifier: GPL-3.0-only -->
+      </code></pre>
+
+      <h3>2) Apache‑2.0 NOTICE file (optional)</h3>
+      <pre><button class="copy-btn" data-target="notice">Copy</button><code id="notice">
+This product includes software developed by ACME Labs (https://example.com/).
+Portions © 2025 ACME Labs and contributors. See the LICENSE file for details.
+      </code></pre>
+
+      <h3>3) README blurb</h3>
+      <pre><button class="copy-btn" data-target="readme">Copy</button><code id="readme">
+## License
+This project is licensed under the Apache License 2.0 — see the [LICENSE](LICENSE) file for details.
+      </code></pre>
+    </section>
+
+    <footer>
+      <p class="footnote">This guide is a general reference and not legal advice. For complex or high‑stakes situations, consult a lawyer.</p>
+    </footer>
+  </div>
+
+  <script>
+    // Filter table rows by search input
+    const filterInput = document.getElementById('filter');
+    const table = document.getElementById('license-table');
+    const rows = Array.from(table.querySelectorAll('tbody tr'));
+    filterInput?.addEventListener('input', () => {
+      const q = filterInput.value.toLowerCase();
+      rows.forEach(tr => {
+        const text = tr.innerText.toLowerCase();
+        tr.style.display = text.includes(q) ? '' : 'none';
+      });
+    });
+
+    // Copy-to-clipboard for code blocks
+    function copyFrom(elId){
+      const code = document.getElementById(elId);
+      if(!code) return;
+      const txt = code.innerText.replace(/^\\n+|\\s+$/g,'');
+      navigator.clipboard.writeText(txt).then(()=>{
+        const btn = document.querySelector('.copy-btn[data-target=\"'+elId+'\"]');
+        if(btn){ const old = btn.innerText; btn.innerText='Copied!'; setTimeout(()=>btn.innerText=old,1200); }
+      });
+    }
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+      btn.addEventListener('click', () => copyFrom(btn.getAttribute('data-target')));
+    });
+
+    // Add anchor links to headings
+    document.querySelectorAll('h2[id], h3[id]').forEach(h => {
+      const a = document.createElement('a');
+      a.href = '#' + h.id;
+      a.textContent = '¶';
+      a.style.marginLeft = '8px';
+      a.style.textDecoration = 'none';
+      a.setAttribute('aria-label', 'Anchor link');
+      h.appendChild(a);
+    });
+  </script>
+</body>
+</html>
