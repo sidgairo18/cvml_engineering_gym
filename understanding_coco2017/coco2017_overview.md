@@ -93,3 +93,5 @@ coco/
 * [Dataset paper](https://arxiv.org/abs/1405.0312)
 * [pycocotools GitHub](https://github.com/cocodataset/cocoapi)
 
+
+Note: Created with ChatGPT_5.
