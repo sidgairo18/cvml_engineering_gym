@@ -1,3 +1,6 @@
+import os
+import matplotlib.pyplot as plt
+
 import json
 import argparse
 from random import shuffle
@@ -14,7 +17,7 @@ areaRng = [32 ** 2, 96 ** 2, 1e5 ** 2]
 
 
 ########## additional helpers ##########
-from collections import Counter
+from collections import Counter, defaultdict
 
 def _size_bucket(area, areaRng):
     if area < areaRng[0]: return 'S'
@@ -68,6 +71,125 @@ def evaluate_subset(per_img_bins, ref_hist, subset_ids, objective='spread'):
 
     return score, sampled
 
+def plot_coco_vs_mini_hist(
+    dataset_train,
+    imgs_best_sample,
+    normalization="annots",
+    save_file_name="coco_minitrain",
+    figsize=(20, 12),
+    rotation=60,
+):
+    """
+    Compare class-wise histograms of full COCO train2017 vs. a sampled mini subset.
+
+    Args:
+        dataset_train: CocoDataset instance (with dataset_train.coco loaded for train2017).
+        imgs_best_sample: dict {image_id: [annotation dicts]} returned by the sampler.
+        normalization: "annots" or "images"
+            - "annots": normalize per-class annotation counts by total annotations.
+            - "images": normalize per-class image counts (images that contain the class at least once)
+                        by total number of images.
+        save_file_name: base name for the saved PNG file. The function appends suffixes automatically.
+        figsize: matplotlib figure size.
+        rotation: rotation (deg) for x tick labels.
+
+    Returns:
+        (full_norm, mini_norm, class_names): numpy arrays with the plotted values + class name list.
+    """
+
+    assert normalization in ("annots", "images"), "normalization must be 'annots' or 'images'"
+
+    coco = dataset_train.coco
+    # ---- class id / name ordering (ascending by COCO category id) ----
+    cats = coco.loadCats(coco.getCatIds())
+    cats.sort(key=lambda c: c["id"])
+    class_ids = [c["id"] for c in cats]     # length 80
+    class_names = [c["name"] for c in cats] # aligned with class_ids
+    K = len(class_ids)
+    idx_of_cat = {cid: i for i, cid in enumerate(class_ids)}
+
+    # ---- FULL DATASET COUNTS ----
+    if normalization == "annots":
+        full_counts = np.zeros(K, dtype=np.int64)
+        for ann in coco.anns.values():
+            cid = ann["category_id"]
+            i = idx_of_cat[cid]
+            # skip degenerate boxes to be consistent with sampling script
+            w, h = ann["bbox"][2], ann["bbox"][3]
+            if w >= 1 and h >= 1:
+                full_counts[i] += 1
+        full_den = full_counts.sum() if full_counts.sum() > 0 else 1
+        full_norm = full_counts / full_den
+    else:  # "images"
+        # number of images that contain at least one instance of the class
+        # catToImgs already has this mapping
+        full_img_counts = np.zeros(K, dtype=np.int64)
+        for j, cid in enumerate(class_ids):
+            full_img_counts[j] = len(coco.catToImgs.get(cid, []))
+        full_den = len(coco.imgs) if len(coco.imgs) > 0 else 1
+        full_norm = full_img_counts / full_den
+
+    # ---- MINI SUBSET COUNTS ----
+    sel_img_ids = list(imgs_best_sample.keys())
+    if normalization == "annots":
+        mini_counts = np.zeros(K, dtype=np.int64)
+        for im_id, anns in imgs_best_sample.items():
+            for ann in anns:
+                cid = ann["category_id"]
+                w, h = ann["bbox"][2], ann["bbox"][3]
+                if w >= 1 and h >= 1:
+                    i = idx_of_cat[cid]
+                    mini_counts[i] += 1
+        mini_den = mini_counts.sum() if mini_counts.sum() > 0 else 1
+        mini_norm = mini_counts / mini_den
+    else:  # "images"
+        # mark for each selected image which classes appear at least once
+        class_in_image = defaultdict(set)  # im_id -> set of class indices
+        for im_id, anns in imgs_best_sample.items():
+            for ann in anns:
+                i = idx_of_cat[ann["category_id"]]
+                class_in_image[im_id].add(i)
+
+        mini_img_counts = np.zeros(K, dtype=np.int64)
+        for im_id in sel_img_ids:
+            for i in class_in_image.get(im_id, []):
+                mini_img_counts[i] += 1
+
+        mini_den = len(sel_img_ids) if len(sel_img_ids) > 0 else 1
+        mini_norm = mini_img_counts / mini_den
+
+    # ---- PLOTTING ----
+    # split 80 classes into two groups of 40
+    splits = [(0, 40), (40, 80)]
+    fig, axes = plt.subplots(nrows=2, ncols=1, figsize=figsize, constrained_layout=True)
+
+    title_top = {
+        "annots": "Annotation Ratios Normalized with Total Annotation Count",
+        "images": "Annotation Ratios Normalized with Total Image Count",
+    }[normalization]
+    big_title = "Total Annotations Normalized by Total Annotation Count:" if normalization == "annots" \
+                else "Small Annotations\n\nSmall Annotations Normalized by Total Image Count:"
+    # The above matches your example headings' flavor; tweak as you like.
+    fig.suptitle(title_top, fontsize=16, y=1.02)
+
+    for ax, (lo, hi) in zip(axes, splits):
+        x = np.arange(hi - lo)
+        width = 0.4
+        ax.bar(x - width/2, full_norm[lo:hi], width=width, label="train2017")
+        ax.bar(x + width/2, mini_norm[lo:hi], width=width, label="minitrain")
+        ax.set_xticks(x)
+        ax.set_xticklabels(class_names[lo:hi], rotation=rotation, ha="right")
+        ax.set_ylabel("Annotation Ratios")
+        ax.set_xlabel("Class Names")
+        ax.legend()
+
+    # ---- SAVE ----
+    suf = "annots" if normalization == "annots" else "images"
+    out_path = f"{save_file_name}_hist_{suf}.png"
+    plt.savefig(out_path, dpi=200, bbox_inches="tight")
+    plt.close(fig)
+
+    return full_norm, mini_norm, class_names
 
 
 ########## additional helpers end ##########
@@ -454,6 +576,14 @@ def main(args=None):
 
         with open(f"{parser.save_file_name}.json", 'w') as jsonf:
             json.dump(mini_coco, jsonf)
+
+	# After you've produced imgs_best_sample with your sampler:
+	full_norm, mini_norm, class_names = plot_coco_vs_mini_hist(
+		dataset_train,
+		imgs_best_sample,
+		normalization="annots",             # or "images"
+		save_file_name=parser.save_file_name
+	)
 
     exit(0)
 
