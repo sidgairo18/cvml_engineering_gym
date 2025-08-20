@@ -1,0 +1,6 @@
+numpy
+tqdm
+matplotlib
+pycocotools
+lvis
+opencv-python
