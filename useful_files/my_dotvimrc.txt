@@ -1,0 +1,22 @@
+set number                                                                                    
+set numberwidth=5                                                                             
+                                                                                              
+set softtabstop=4                                                                             
+set tabstop=4                                                                                 
+set shiftwidth=4                                                                              
+set wrap                                                                                      
+                                                                                              
+set showcmd                                                                                   
+set wildmenu                                                                                  
+set wildmode=list:full                                                                        
+                                                                                              
+set hlsearch                                                                                  
+set incsearch                                                                                 
+                                                                                              
+set expandtab "Convert tab to spaces, for haskell.                                            
+"set foldmethod=syntax                                                                        
+set colorcolumn=90                                                                            
+                                                                                              
+filetype plugin indent on                                                                     
+                                                                                              
+syntax on
