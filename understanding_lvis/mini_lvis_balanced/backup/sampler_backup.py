@@ -315,5 +315,5 @@ def sample_balanced_greedy(
             print(f"[greedy] chosen={len(chosen)}  mix=({count_imgs_tier['c']},{count_imgs_tier['f']},{count_imgs_tier['r']}) / ({Bc},{Bf},{Br})")
 
     # return subset as {im_id: [ann dicts]}
-    return {int(i): [lvis.anns[a] for a in lvis.img_ann_map[int(i)]] for i in chosen}
+    return {int(i): [lvis.anns[a['id']] for a in lvis.img_ann_map[int(i)]] for i in chosen}
 

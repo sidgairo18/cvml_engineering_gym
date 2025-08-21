@@ -15,9 +15,9 @@ python main.py \
 --save_file_name lvis_mini_balanced_25k_fixed \
 --total_images 25000 \
 --alpha 0.6 \
---tier_bonus 1.0,1.0,1.0 \
+--tier_bonus 1.0,1.0,0.7 \
 --lambda_tier 5.0 \
---lambda_cap 0.5 \
+--lambda_cap 0.4 \
 --rare_cap 1 \
 --seed 1337 \
 --debug

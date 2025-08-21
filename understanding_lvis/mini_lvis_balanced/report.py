@@ -1,27 +1,12 @@
 # mini_lvis_balanced/report.py
-import os
-import json
-import math
 import argparse
-from collections import Counter, defaultdict
-
 import numpy as np
-import matplotlib.pyplot as plt
+from collections import Counter
 from lvis import LVIS
+import matplotlib.pyplot as plt
+import csv
 
-
-# -----------------------------
-# Bucketing / helpers
-# -----------------------------
-def _size_bucket_from_bbox(bbox, areaRng):
-    w, h = bbox[2], bbox[3]
-    if w < 1 or h < 1:
-        return None
-    a = w * h
-    if a < areaRng[0]: return "S"
-    if a < areaRng[1]: return "M"
-    return "L"
-
+# ---------- helpers ----------
 def _cat_meta(lvis):
     cats = lvis.load_cats(lvis.get_cat_ids())
     by_id = {c["id"]: c for c in cats}
@@ -33,321 +18,318 @@ def _cat_meta(lvis):
 def _tier_of(cat_meta, cid):
     return cat_meta[cid]["frequency"]
 
-
-# -----------------------------
-# Full-train stats & targets
-# -----------------------------
-def compute_tier_stats(lvis):
+def _compute_tier_stats(lvis):
     cat_meta, tiers = _cat_meta(lvis)
-    # classes per tier
     classes = {t: len(tiers[t]) for t in "cfr"}
-    # annotations per tier
-    ann_counts = {"c":0, "f":0, "r":0}
+    ann_counts = {"c": 0, "f": 0, "r": 0}
     for ann in lvis.anns.values():
         ann_counts[_tier_of(cat_meta, ann["category_id"])] += 1
-    # image sets per tier (≥1 instance)
     img_sets = {"c": set(), "f": set(), "r": set()}
     for t in "cfr":
         for cid in tiers[t]:
-            img_sets[t].update(lvis.cat_img_map[cid])
+            img_sets[t].update(lvis.cat_img_map.get(cid, []))
     images = {t: len(img_sets[t]) for t in "cfr"}
     totals = {
         "classes": sum(classes.values()),
         "annotations": sum(ann_counts.values()),
         "images": len(lvis.imgs),
     }
-    return classes, ann_counts, images, totals
+    return classes, ann_counts, images, totals, cat_meta, tiers, img_sets
 
-def compute_target_tier_mix(classes, ann_counts, alpha=0.6):
-    cls_sum = sum(classes.values())
-    ann_sum = sum(ann_counts.values())
-    cls_share = np.array([classes[t]/cls_sum for t in "cfr"])
-    ann_share = np.array([ann_counts[t]/ann_sum for t in "cfr"])
-    mix = alpha * ann_share + (1 - alpha) * cls_share
-    mix = mix / mix.sum()
-    return {"c": mix[0], "f": mix[1], "r": mix[2]}
-
-
-# -----------------------------
-# Build class×size tables
-# -----------------------------
-def build_class_size_table(lvis, areaRng, tier=None):
-    """Return dict[(cid, size)] -> count. If tier is None, include all tiers."""
-    cat_meta, _ = _cat_meta(lvis)
-    tab = Counter()
+def _category_ann_count(lvis):
+    c = Counter()
     for ann in lvis.anns.values():
-        cid = ann["category_id"]
-        if (tier is not None) and (_tier_of(cat_meta, cid) != tier):
-            continue
-        sb = _size_bucket_from_bbox(ann["bbox"], areaRng)
-        if sb is None:
-            continue
-        tab[(cid, sb)] += 1
-    return tab
+        c[ann["category_id"]] += 1
+    return c
 
-def build_subset_class_size_table(lvis_train, subset_json_path, areaRng, tier=None):
-    """Same schema but computed from a LVIS-style subset json."""
-    with open(subset_json_path, "r") as f:
-        subset = json.load(f)
+def _pearson(x, y):
+    x = np.asarray(x, dtype=np.float64)
+    y = np.asarray(y, dtype=np.float64)
+    if x.size == 0 or y.size == 0 or x.std() == 0 or y.std() == 0:
+        return float('nan')
+    return float(np.corrcoef(x, y)[0, 1])
 
-    # Build quick cat->tier from train meta (subset lacks 'frequency')
-    cat_meta, _ = _cat_meta(lvis_train)
+def _plot_class_annotation_bars(lvis_full, lvis_mini, f_tiers, f_meta,
+                                save_prefix, seed=1337, n_per_tier=20,
+                                ylog=False, eps=1e-8):
+    """
+    Draw two figures comparing per-class annotation ratios (full vs mini) for
+    60 random categories: 20 from each tier (c,f,r).
+    Two normalizations:
+      (A) class_ann / total_images   (per dataset)
+      (B) class_ann / total_annots   (per dataset)
 
-    tab = Counter()
-    for ann in subset["annotations"]:
-        cid = ann["category_id"]
-        if (tier is not None) and (_tier_of(cat_meta, cid) != tier):
-            continue
-        sb = _size_bucket_from_bbox(ann["bbox"], areaRng)
-        if sb is None:
-            continue
-        tab[(cid, sb)] += 1
-    return tab
+    Extras:
+      * ylog=True -> log-scale y-axis (with epsilon)
+      * shaded backgrounds + colored tick labels for c/f/r blocks
+    Outputs:
+      f"{save_prefix}_norm_images.png"
+      f"{save_prefix}_norm_annots.png"
+    """
+    rng = np.random.default_rng(seed)
 
-def counts_to_aligned_vectors(full_tab, mini_tab):
-    """Align (cid,size) keys, return (full_vec, mini_vec, keys)."""
-    keys = sorted(set(full_tab.keys()) | set(mini_tab.keys()))
-    f = np.array([full_tab.get(k, 0) for k in keys], dtype=np.float64)
-    m = np.array([mini_tab.get(k, 0) for k in keys], dtype=np.float64)
-    return f, m, keys
-
-
-# -----------------------------
-# Coverage / per-tier aggregates
-# -----------------------------
-def subset_coverage_by_tier(lvis_train, subset_json_path):
-    with open(subset_json_path, "r") as f:
-        subset = json.load(f)
-    cat_meta, tiers = _cat_meta(lvis_train)
-
-    # Which categories appear in subset?
-    present = set(a["category_id"] for a in subset["annotations"])
-
-    coverage = {}
+    # sample 20 per tier and keep them grouped in order: [20 c][20 f][20 r]
+    picks_by_tier = {}
     for t in "cfr":
-        total_t = len(tiers[t])
-        have_t = sum(1 for cid in tiers[t] if cid in present)
-        coverage[t] = (have_t, total_t, have_t / max(1, total_t))
-    return coverage
+        ids = sorted(list(f_tiers[t]))
+        rng.shuffle(ids)
+        picks_by_tier[t] = ids[:min(n_per_tier, len(ids))]
 
-def subset_tier_image_annotation_counts(lvis_train, subset_json_path):
-    with open(subset_json_path, "r") as f:
-        subset = json.load(f)
-    cat_meta, _ = _cat_meta(lvis_train)
+    sampled = picks_by_tier["c"] + picks_by_tier["f"] + picks_by_tier["r"]
+    counts_c = len(picks_by_tier["c"])
+    counts_f = len(picks_by_tier["f"])
+    counts_r = len(picks_by_tier["r"])
 
-    # Images per tier: an image counts toward a tier if it has ≥1 ann of that tier.
-    img_tiers = {"c": set(), "f": set(), "r": set()}
-    for ann in subset["annotations"]:
-        t = _tier_of(cat_meta, ann["category_id"])
-        img_tiers[t].add(ann["image_id"])
+    # per-category ann counts
+    from collections import Counter
+    def per_cat_ann(lvis):
+        c = Counter()
+        for a in lvis.anns.values():
+            c[a["category_id"]] += 1
+        return c
+    full_per_cat = per_cat_ann(lvis_full)
+    mini_per_cat = per_cat_ann(lvis_mini)
 
-    # Annots per tier:
-    ann_tiers = {"c":0, "f":0, "r":0}
-    for ann in subset["annotations"]:
-        t = _tier_of(cat_meta, ann["category_id"])
-        ann_tiers[t] += 1
+    # totals
+    full_total_imgs = max(1, len(lvis_full.imgs))
+    mini_total_imgs = max(1, len(lvis_mini.imgs))
+    full_total_anns = max(1, sum(full_per_cat.values()))
+    mini_total_anns = max(1, sum(mini_per_cat.values()))
 
-    return (
-        {t: len(img_tiers[t]) for t in "cfr"},
-        ann_tiers,
-        len(subset["images"]),
-        len(subset["annotations"]),
+    # labels & tiers
+    names = [f_meta[cid]["name"] for cid in sampled]
+    tiers_per_class = [f_meta[cid]["frequency"] for cid in sampled]  # 'c','f','r'
+    label_txt = [n if len(n) <= 18 else n[:16] + "…" for n in names]
+
+    # helper: compute series
+    #import numpy as np
+    def build_series(norm="images"):
+        full_vals, mini_vals = [], []
+        for cid in sampled:
+            fa = full_per_cat.get(cid, 0)
+            ma = mini_per_cat.get(cid, 0)
+            if norm == "images":
+                full_vals.append((fa / full_total_imgs) + (eps if ylog else 0.0))
+                mini_vals.append((ma / mini_total_imgs) + (eps if ylog else 0.0))
+            else:
+                full_vals.append((fa / full_total_anns) + (eps if ylog else 0.0))
+                mini_vals.append((ma / mini_total_anns) + (eps if ylog else 0.0))
+        return np.array(full_vals, dtype=float), np.array(mini_vals, dtype=float)
+
+    # styling helpers
+    tier_colors = {"c": "#2b8a3e", "f": "#f08c00", "r": "#e03131"}  # green / orange / red (ticks & spans)
+    def shade_tier_blocks(ax):
+        # ranges: [0, c-1], [c, c+f-1], [c+f, c+f+r-1]
+        spans = [
+            (0, max(0, counts_c - 1), "c"),
+            (counts_c, max(counts_c, counts_c + counts_f - 1), "f"),
+            (counts_c + counts_f, max(counts_c + counts_f, counts_c + counts_f + counts_r - 1), "r")
+        ]
+        for lo, hi, t in spans:
+            if hi < lo:  # empty tier slice
+                continue
+            ax.axvspan(lo - 0.5, hi + 0.5, color=tier_colors[t], alpha=0.06)
+
+    def color_tick_labels(ax, start_index=0):
+        for i, tick in enumerate(ax.get_xticklabels()):
+            t = tiers_per_class[start_index + i]
+            tick.set_color(tier_colors[t])
+
+    # draw routine (split into 2 rows of 30 items for readability)
+    def draw_and_save(full_vals, mini_vals, title, out_png):
+        import matplotlib.pyplot as plt
+        K = len(sampled)
+        halves = [slice(0, min(30, K)), slice(min(30, K), K)]
+        fig, axs = plt.subplots(2, 1, figsize=(20, 9), constrained_layout=False)
+        for row_idx, (ax, sl) in enumerate(zip(axs, halves)):
+            idx = np.arange(sl.stop - sl.start)
+            fv = full_vals[sl]
+            mv = mini_vals[sl]
+            labs = label_txt[sl]
+
+            # tier shading for this window
+            shade_tier_blocks(ax)
+
+            width = 0.42
+            ax.bar(idx - width/2, fv, width=width, label="Full (train)")
+            ax.bar(idx + width/2, mv, width=width, label="Mini")
+            ax.set_xticks(idx)
+            ax.set_xticklabels(labs, rotation=60, ha="right", fontsize=9)
+            ax.set_ylabel("Annotation Ratio")
+
+            # color xtick labels by tier
+            start_index = sl.start
+            color_tick_labels(ax, start_index=start_index)
+
+            if ylog:
+                ax.set_yscale("log")
+            ax.grid(axis="y", linestyle=":", alpha=0.35)
+
+        axs[0].legend(loc="upper right")
+        fig.suptitle(title, fontsize=16)
+        fig.tight_layout(rect=[0, 0.02, 1, 0.96])
+        fig.savefig(out_png, dpi=200)
+        plt.close(fig)
+
+    # (A) normalized by total image count
+    f_img, m_img = build_series(norm="images")
+    draw_and_save(
+        f_img, m_img,
+        "Per-class Annotation Ratios — normalized by total image count (random 60: 20 c, 20 f, 20 r)",
+        f"{save_prefix}_norm_images.png"
+    )
+
+    # (B) normalized by total annotation count
+    f_ann, m_ann = build_series(norm="annots")
+    draw_and_save(
+        f_ann, m_ann,
+        "Per-class Annotation Ratios — normalized by total annotation count (random 60: 20 c, 20 f, 20 r)",
+        f"{save_prefix}_norm_annots.png"
     )
 
 
-# -----------------------------
-# Correlations & plotting
-# -----------------------------
-def safe_pearson(x, y):
-    if np.all(x == 0) and np.all(y == 0):
-        return 1.0
-    if np.std(x) == 0 or np.std(y) == 0:
-        return float("nan")
-    return float(np.corrcoef(x, y)[0,1])
-
-def plot_report(
-    out_png,
-    tier_metrics,
-    tier_scatter_data,
-    target_mix,
-    actual_mix
-):
-    """
-    tier_metrics: dict tier -> dict of numbers printed
-    tier_scatter_data: dict tier -> (full_vec, mini_vec)
-    target_mix, actual_mix: dict c/f/r -> share
-    """
-    plt.figure(figsize=(16, 10))
-    gs = plt.GridSpec(2, 3, height_ratios=[1.2, 1.0])
-
-    # --- Panel A: Tier mix bar chart ---
-    axA = plt.subplot(gs[0, 0])
-    tiers = ["c","f","r"]; names=["Common","Frequent","Rare"]
-    tgt = [target_mix[t] for t in tiers]
-    act = [actual_mix[t]  for t in tiers]
-    x = np.arange(3)
-    axA.bar(x-0.2, tgt, width=0.4, label="Target")
-    axA.bar(x+0.2, act, width=0.4, label="Mini (actual)")
-    axA.set_xticks(x); axA.set_xticklabels(names)
-    axA.set_ylim(0, 1.0)
-    axA.set_title("Tier Mix (Image Share)")
-    axA.legend()
-
-    # --- Panel B/C/D: Scatter per tier (log-log) ---
-    for col, t in enumerate(tiers):
-        ax = plt.subplot(gs[0, col if col>0 else 1])  # B at [0,1], C at [0,2]; D at [1,0]? Let's place neatly:
-    # To keep layout simple, do 1st row: mix + two scatters; 2nd row: one scatter + legend text
-    plt.close()  # The simple GridSpec above got a bit messy; fallback to a simpler layout below.
-
-    fig, axes = plt.subplots(2, 2, figsize=(16, 12))
-    # Top-left: tier mix
-    axA = axes[0,0]
-    axA.bar(x-0.2, tgt, width=0.4, label="Target")
-    axA.bar(x+0.2, act, width=0.4, label="Mini (actual)")
-    axA.set_xticks(x); axA.set_xticklabels(names)
-    axA.set_ylim(0, 1.0)
-    axA.set_title("Tier Mix (Image Share)")
-    axA.legend()
-
-    # Scatters: we’ll show Frequent & Common & Rare in the remaining three panels
-    order = ["c","f","r"]
-    for ax, t in zip(axes.flatten()[1:], order):
-        f, m = tier_scatter_data[t]
-        # remove zeros for log plotting, but keep correlation computed elsewhere
-        f_plot = np.where(f <= 0, np.nan, f)
-        m_plot = np.where(m <= 0, np.nan, m)
-        ax.scatter(f_plot, m_plot, s=8, alpha=0.5)
-        ax.set_xscale("log"); ax.set_yscale("log")
-        ax.set_xlabel("Full-train counts")
-        ax.set_ylabel("Mini counts")
-        ax.set_title(f"{t.upper()}  (pearson: {tier_metrics[t]['pearson']:.3f})")
-        # Reference y=x
-        lim = [np.nanmin(f_plot), np.nanmax(f_plot)]
-        lim = [max(1, lim[0]), max(1, lim[1])]
-        mn, mx = lim[0], lim[1]
-        ax.plot([mn, mx], [mn, mx], ls="--", lw=1, color="gray")
-
-    plt.tight_layout()
-    plt.savefig(out_png, dpi=200)
-    plt.close(fig)
-
-
-# -----------------------------
-# Main entry
-# -----------------------------
+# ---------- main reporting ----------
 def main():
-    ap = argparse.ArgumentParser("mini-LVIS: reporting & diagnostics")
-    ap.add_argument("--train_json", required=True, help="LVIS v1 train json")
-    ap.add_argument("--subset_json", required=True, help="Your mini-LVIS subset json (output of sampler)")
-    ap.add_argument("--alpha", type=float, default=0.6, help="Blend for target tier mix (ann-share vs class-share)")
-    ap.add_argument("--area_small", type=float, default=32.0)
-    ap.add_argument("--area_medium", type=float, default=96.0)
-    ap.add_argument("--save_prefix", type=str, default="lvis_mini_report")
-    ap.add_argument("--export_csv", action="store_true", help="Also export per-tier class×size tables to CSV")
+    ap = argparse.ArgumentParser("Mini-LVIS report (tier ratios, coverage, overall, per-class dump)")
+    ap.add_argument("--full_train_json", required=True, help="Path to lvis_v1_train.json (full)")
+    ap.add_argument("--mini_json", required=True, help="Path to mini LVIS JSON (sampled subset)")
+    ap.add_argument("--save_fig", default="report_tier_ratios.png", help="Where to save the bar plot")
+    ap.add_argument("--out_csv", type=str, help="Optional CSV to export tier+overall summary")
+    ap.add_argument("--out_per_class_csv", type=str, help="Optional CSV to export per-class stats")
+    ap.add_argument("--no_fig", action="store_true", help="Skip figure")
+    ap.add_argument("--class_bar_fig", type=str,
+                    help="If set, save per-class bar charts here (prefix). Two images will be written: *_norm_images.png and *_norm_annots.png")
+    ap.add_argument("--class_bar_seed", type=int, default=1337,
+                    help="Random seed for sampling 20 classes per tier (c/f/r)")
+    ap.add_argument("--class_bar_log", action="store_true",
+                    help="Use log-scale on Y axis for per-class bar charts")
+    ap.add_argument("--class_bar_eps", type=float, default=1e-8,
+                    help="Small epsilon added before log to avoid zeros")
     args = ap.parse_args()
 
-    areaRng = [args.area_small**2, args.area_medium**2, 1e5**2]
+    # Load datasets
+    print("Annotations Loading ...")
+    lvis_full = LVIS(args.full_train_json)
+    lvis_mini = LVIS(args.mini_json)
+    print("Annotations Loaded!")
 
-    # Load
-    lvis_train = LVIS(args.train_json)
+    # Tier stats
+    f_classes, f_anns, f_imgs, f_totals, f_meta, f_tiers, _ = _compute_tier_stats(lvis_full)
+    m_classes, m_anns, m_imgs, m_totals, m_meta, m_tiers, _ = _compute_tier_stats(lvis_mini)
 
-    # Targets from full train
-    classes, ann_counts, _, totals = compute_tier_stats(lvis_train)
-    target_mix = compute_target_tier_mix(classes, ann_counts, alpha=args.alpha)
+    # Coverage per tier (category has ≥1 annotation in mini)
+    cats_with_anns_mini = set(a["category_id"] for a in lvis_mini.anns.values())
+    coverage = {
+        t: len(f_tiers[t] & cats_with_anns_mini) / max(1, len(f_tiers[t]))
+        for t in "cfr"
+    }
 
-    # Actual subset tier shares (by images)
-    img_tier_counts, ann_tier_counts, total_img_subset, total_ann_subset = subset_tier_image_annotation_counts(
-        lvis_train, args.subset_json
-    )
-    actual_mix = {t: img_tier_counts[t] / max(1, total_img_subset) for t in "cfr"}
+    # Ratios per tier
+    ann_ratio = {t: m_anns[t] / max(1, f_anns[t]) for t in "cfr"}
+    img_ratio = {t: m_imgs[t] / max(1, f_imgs[t]) for t in "cfr"}
 
-    # Per-tier class×size (full vs mini)
-    tier_metrics = {}
-    tier_scatter_data = {}
+    # Per-tier Pearson
+    full_per_cat = _category_ann_count(lvis_full)
+    mini_per_cat = _category_ann_count(lvis_mini)
+    pearson = {}
     for t in "cfr":
-        full_tab = build_class_size_table(lvis_train, areaRng, tier=t)
-        mini_tab = build_subset_class_size_table(lvis_train, args.subset_json, areaRng, tier=t)
-        f, m, keys = counts_to_aligned_vectors(full_tab, mini_tab)
+        ids = sorted(list(f_tiers[t]))
+        x = [full_per_cat.get(cid, 0) for cid in ids]
+        y = [mini_per_cat.get(cid, 0) for cid in ids]
+        pearson[t] = _pearson(x, y)
 
-        # normalize to proportions to compare shapes
-        f_norm = f / max(1, f.sum())
-        m_norm = m / max(1, m.sum())
+    # Overall ratios
+    overall_ann_ratio = m_totals["annotations"] / max(1, f_totals["annotations"])
+    overall_img_ratio = m_totals["images"] / max(1, f_totals["images"])
 
-        pear = safe_pearson(f_norm, m_norm)
-        mse = float(np.mean((f_norm - m_norm) ** 2))
-        k_nonzero_full = int(np.sum(f > 0))
-        k_nonzero_mini = int(np.sum(m > 0))
+    # Print report
+    def _fmt(d): return ", ".join([f"{k}:{d[k]}" for k in "cfr"])
+    print("\n=== LVIS Tier Summary ===")
+    print(f"Full  - classes: [{_fmt(f_classes)}], anns: [{_fmt(f_anns)}], imgs: [{_fmt(f_imgs)}]")
+    print(f"Mini  - classes: [{_fmt(m_classes)}], anns: [{_fmt(m_anns)}], imgs: [{_fmt(m_imgs)}]")
+    print("\nCoverage per tier:", {k: f"{coverage[k]*100:.1f}%" for k in "cfr"})
+    print("Annotation ratio:", {k: f"{ann_ratio[k]:.3f}" for k in "cfr"}, f"overall={overall_ann_ratio:.3f}")
+    print("Image ratio     :", {k: f"{img_ratio[k]:.3f}" for k in "cfr"}, f"overall={overall_img_ratio:.3f}")
+    print("Pearson:", {k: f"{pearson[k]:.3f}" if pearson[k]==pearson[k] else "nan" for k in "cfr"})
 
-        tier_metrics[t] = {
-            "pearson": pear,
-            "mse_norm": mse,
-            "k_nonzero_full": k_nonzero_full,
-            "k_nonzero_mini": k_nonzero_mini,
-            "sum_full": int(f.sum()),
-            "sum_mini": int(m.sum()),
-        }
-        tier_scatter_data[t] = (f, m)
+    # Tier/overall CSV
+    if args.out_csv:
+        with open(args.out_csv, "w", newline="") as cf:
+            writer = csv.writer(cf)
+            writer.writerow(["tier", "coverage_fraction", "ann_ratio", "img_ratio", "pearson"])
+            for t in "cfr":
+                writer.writerow([
+                    {"c": "common", "f": "frequent", "r": "rare"}[t],
+                    f"{coverage[t]:.4f}",
+                    f"{ann_ratio[t]:.4f}",
+                    f"{img_ratio[t]:.4f}",
+                    f"{pearson[t]:.4f}" if pearson[t]==pearson[t] else "nan"
+                ])
+            writer.writerow(["overall", "", f"{overall_ann_ratio:.4f}", f"{overall_img_ratio:.4f}", ""])
+        print(f"[OK] wrote CSV summary -> {args.out_csv}")
 
-        if args.export_csv:
-            import csv
-            csv_path = f"{args.save_prefix}_tier_{t}_class_size.csv"
-            with open(csv_path, "w", newline="") as cf:
-                w = csv.writer(cf)
-                w.writerow(["category_id", "size_bucket", "full_count", "mini_count"])
-                for (cid, sb), fv in full_tab.items():
-                    w.writerow([cid, sb, fv, mini_tab.get((cid, sb), 0)])
-            print(f"[OK] wrote {csv_path}")
+    # NEW: Per-class CSV (id, name, tier, counts, coverage, ratios)
+    if args.out_per_class_csv:
+        # Build quick lookups
+        full_img_per_cat = {cid: len(lvis_full.cat_img_map.get(cid, [])) for cid in f_meta.keys()}
+        mini_img_per_cat = {cid: len(lvis_mini.cat_img_map.get(cid, [])) for cid in f_meta.keys()}
 
-    # Coverage
-    coverage = subset_coverage_by_tier(lvis_train, args.subset_json)
+        with open(args.out_per_class_csv, "w", newline="") as cf:
+            writer = csv.writer(cf)
+            writer.writerow([
+                "category_id", "category_name", "tier",
+                "full_ann_count", "mini_ann_count",
+                "full_img_count", "mini_img_count",
+                "covered_in_mini",
+                "ann_ratio", "img_ratio"
+            ])
+            for cid, cinfo in sorted(f_meta.items(), key=lambda kv: kv[0]):
+                name = cinfo["name"]
+                tier = cinfo["frequency"]  # 'c'/'f'/'r'
+                fa = int(full_per_cat.get(cid, 0))
+                ma = int(mini_per_cat.get(cid, 0))
+                fi = int(full_img_per_cat.get(cid, 0))
+                mi = int(mini_img_per_cat.get(cid, 0))
+                covered = 1 if ma > 0 else 0
+                ann_r = (ma / fa) if fa > 0 else 0.0
+                img_r = (mi / fi) if fi > 0 else 0.0
+                writer.writerow([cid, name, tier, fa, ma, fi, mi, covered, f"{ann_r:.6f}", f"{img_r:.6f}"])
+        print(f"[OK] wrote per-class CSV -> {args.out_per_class_csv}")
 
-    # Print concise text summary
-    print("\n=== mini-LVIS REPORT ===")
-    print(f"subset images: {total_img_subset}, subset annotations: {total_ann_subset}")
-    print("Tier mix (target vs actual, by images):")
-    for t, name in zip("cfr", ["Common","Frequent","Rare"]):
-        tgt = target_mix[t]; act = actual_mix[t]
-        print(f"  {name:<8}  target={tgt:6.3f}   actual={act:6.3f}")
-    print("\nPer-tier class×size alignment (normalized):")
-    for t, name in zip("cfr", ["Common","Frequent","Rare"]):
-        m = tier_metrics[t]
-        print(f"  {name:<8}  pearson={m['pearson']:.3f}  mse={m['mse_norm']:.6f}  "
-              f"k_full={m['k_nonzero_full']}  k_mini={m['k_nonzero_mini']}  "
-              f"sum_full={m['sum_full']}  sum_mini={m['sum_mini']}")
-    print("\nCoverage (categories present ≥1 ann in subset):")
-    for t, name in zip("cfr", ["Common","Frequent","Rare"]):
-        have, total, frac = coverage[t]
-        print(f"  {name:<8}  {have}/{total}  ({frac*100:.1f}%)")
+    # Figure
+    if not args.no_fig:
+        tiers = ["c","f","r"]; names = ["Common","Frequent","Rare"]
+        x = np.arange(3); w = 0.35
+        fig, axs = plt.subplots(1, 2, figsize=(10, 4))
+        axs[0].bar(x - w/2, [ann_ratio[t] for t in tiers], width=w, label="Annotations")
+        axs[0].bar(x + w/2, [img_ratio[t]  for t in tiers], width=w, label="Images")
+        axs[0].set_xticks(x); axs[0].set_xticklabels(names)
+        axs[0].set_title("Mini / Full Ratios by Tier"); axs[0].legend()
+        axs[0].axhline(1.0, linestyle="--", linewidth=1)
+        axs[1].bar(x, [coverage[t]*100 for t in tiers], width=0.6)
+        axs[1].set_xticks(x); axs[1].set_xticklabels(names)
+        axs[1].set_title("Category Coverage (%) by Tier"); axs[1].set_ylim(0, 100)
+        fig.suptitle("Mini-LVIS: Tier Ratios & Coverage", fontsize=12)
+        fig.tight_layout()
+        fig.savefig(args.save_fig, dpi=200); plt.close(fig)
+        print(f"[OK] saved figure -> {args.save_fig}")
 
-    # Plot PNG
-    out_png = f"{args.save_prefix}_overview.png"
-    plot_report(out_png, tier_metrics, tier_scatter_data, target_mix, actual_mix)
-    print(f"\n[OK] wrote {out_png}")
-
-    # Markdown summary for experiment logs
-    md_path = f"{args.save_prefix}_summary.md"
-    with open(md_path, "w") as mf:
-        mf.write("# mini-LVIS Report\n\n")
-        mf.write(f"- Subset images: **{total_img_subset}**\n")
-        mf.write(f"- Subset annotations: **{total_ann_subset}**\n\n")
-        mf.write("## Tier mix (image share)\n\n")
-        mf.write("| Tier | Target | Actual |\n|---|---:|---:|\n")
-        for t, name in zip("cfr", ["Common","Frequent","Rare"]):
-            mf.write(f"| {name} | {target_mix[t]:.3f} | {actual_mix[t]:.3f} |\n")
-        mf.write("\n## Per-tier class×size alignment\n\n")
-        mf.write("| Tier | Pearson | MSE (norm) | Nonzero (full) | Nonzero (mini) | Sum full | Sum mini |\n|---|---:|---:|---:|---:|---:|---:|\n")
-        for t, name in zip("cfr", ["Common","Frequent","Rare"]):
-            m = tier_metrics[t]
-            mf.write(f"| {name} | {m['pearson']:.3f} | {m['mse_norm']:.6f} | {m['k_nonzero_full']} | {m['k_nonzero_mini']} | {m['sum_full']} | {m['sum_mini']} |\n")
-        mf.write("\n## Coverage (categories with ≥1 ann)\n\n")
-        mf.write("| Tier | Covered / Total | % |\n|---|---:|---:|\n")
-        for t, name in zip("cfr", ["Common","Frequent","Rare"]):
-            have, total, frac = coverage[t]
-            mf.write(f"| {name} | {have}/{total} | {frac*100:.1f}% |\n")
-        mf.write(f"\n**Figure:** `{os.path.basename(out_png)}`\n")
-    print(f"[OK] wrote {md_path}")
-
+    # --- Per-class bars (60 random: 20 per tier) ---
+    if args.class_bar_fig:
+        _plot_class_annotation_bars(
+            lvis_full=lvis_full,
+            lvis_mini=lvis_mini,
+            f_tiers=f_tiers,          # from _compute_tier_stats(lvis_full)
+            f_meta=f_meta,            # category metadata from full set
+            save_prefix=args.class_bar_fig,
+            seed=args.class_bar_seed,
+            n_per_tier=20,
+            ylog=args.class_bar_log,          # NEW
+            eps=args.class_bar_eps            # NEW
+        )
+        print(f"[OK] saved per-class figures -> {args.class_bar_fig}_norm_images.png and *_norm_annots.png")
 
 if __name__ == "__main__":
     main()
+    exit(0)
 

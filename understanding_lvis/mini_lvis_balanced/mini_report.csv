@@ -1,0 +1,5 @@
+tier,coverage_fraction,ann_ratio,img_ratio,pearson
+common,1.0000,0.5748,0.7223,0.9916
+frequent,1.0000,0.1861,0.2450,0.9829
+rare,0.9941,0.6203,0.5780,0.9070
+overall,,0.2077,0.2496,

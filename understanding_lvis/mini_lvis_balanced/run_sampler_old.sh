@@ -1,7 +1,7 @@
 python main_backup.py \
 --train_json /BS/generative_modelling_for_image_understanding/nobackup/data/DETECTRON2_DATASETS/lvis/annotations/lvis_v1_train.json \
---save_file_name lvis_mini_balanced_5k_backup \
---total_images 5000 \
+--save_file_name lvis_mini_balanced_1k_backup \
+--total_images 1000 \
 --alpha 0.6 \
 --tier_bonus 1.0,1.0,0.6 \
 --lambda_tier 3.0 \
