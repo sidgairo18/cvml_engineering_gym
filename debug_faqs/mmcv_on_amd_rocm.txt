@@ -1,0 +1,6 @@
+Useful Links:
+
+MMCV Build is slow: https://github.com/open-mmlab/mmcv/issues/2637
+Build MMCV-Full on rocm (AMD):
+(1) https://github.com/open-mmlab/mmcv/issues/2312
+(2) https://github.com/open-mmlab/mmcv/issues/1394
