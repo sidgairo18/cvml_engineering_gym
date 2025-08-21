@@ -1,0 +1,24 @@
+Track JSON with Git LFS
+
+Only works if the large blob never reached the remote (your push was rejected, so you’re fine). Re-commit the file as an LFS pointer and push again.
+
+# 1) Undo the last commit if it added the big JSON
+#    (keeps your changes in the working tree)
+git reset --mixed HEAD~1
+
+# 2) Install & init LFS (one-time on your machine)
+git lfs install
+
+# 3) Track the large file (specific path is better than *.json)
+git lfs track "understanding_lvis/mini_lvis_balanced/lvis_mini_balanced_25k_fixed.json"
+git add .gitattributes
+
+# 4) Re-add the file so it becomes an LFS pointer
+git add "understanding_lvis/mini_lvis_balanced/lvis_mini_balanced_25k_fixed.json"
+
+# 5) Commit and push
+git commit -m "Track mini LVIS JSON with Git LFS"
+git push origin main
+
+
+Tip: prefer tracking just that path instead of all *.json, so you don’t put normal JSONs into LFS.
