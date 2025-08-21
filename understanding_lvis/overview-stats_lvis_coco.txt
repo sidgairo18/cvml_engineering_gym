@@ -39,3 +39,5 @@ size_buckets S/M/L: 124933 / 78305 / 41275
 tiers.num_classes: {'c': 461, 'f': 405, 'r': 337}
 tiers.num_annotations: {'c': 13080, 'f': 230427, 'r': 1200}
 tiers.num_images: {'c': 3630, 'f': 66178, 'r': 331}
+
+{'lvis_train ∩ coco_train': 100170, 'lvis_train ∩ coco_val': 0, 'lvis_val ∩ coco_train': 15000, 'lvis_val ∩ coco_val': 4809}
