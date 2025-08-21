@@ -1,0 +1,30 @@
+{
+  "total_images": 100170,
+  "num_classes": 1203,
+  "total_annotations": 1270141,
+  "avg_instances_per_image": 12.679854247778776,
+  "avg_classes_per_image": 3.6317462872781423,
+  "overall_mean_instances_per_class_per_image": 3.4787599487167755,
+  "size_buckets": {
+    "L": 210708,
+    "M": 392988,
+    "S": 665074
+  },
+  "tiers": {
+    "num_classes": {
+      "c": 461,
+      "f": 405,
+      "r": 337
+    },
+    "num_annotations": {
+      "c": 64626,
+      "f": 1200258,
+      "r": 5257
+    },
+    "num_images": {
+      "c": 17998,
+      "f": 341458,
+      "r": 1496
+    }
+  }
+}

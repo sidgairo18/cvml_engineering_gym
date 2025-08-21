@@ -1,0 +1,13 @@
+{
+  "total_images": 5000,
+  "num_classes": 80,
+  "total_annotations": 36781,
+  "avg_instances_per_image": 7.3562,
+  "avg_classes_per_image": 2.9545638126009695,
+  "overall_mean_instances_per_class_per_image": 2.1705165968280498,
+  "size_buckets": {
+    "M": 12825,
+    "L": 12483,
+    "S": 11472
+  }
+}
