@@ -128,50 +128,31 @@ def rare_cap_penalty(imgs_by_class_counts, rare_quota):
 # ---------- Estimate rare quotas ----------
 def estimate_rare_quotas(lvis, cat_meta, tier="r", rare_cap=2, target_rare_images=None):
     """
-    Assign per-rare-class image quotas using largest-remainder rounding.
-    - Proportional to per-class annotation mass.
-    - Capped by `rare_cap`.
-    - Sum ≈ target_rare_images (if provided).
+    Heuristic: proportional to per-class annotation counts, converted to image quotas,
+    then clipped by rare_cap, and scaled to sum ≈ target_rare_images (if provided).
     """
-    # 1) per-class annotation mass (rare only)
+    # per-class annots
     Hk = {}
     for ann in lvis.anns.values():
         cid = ann["category_id"]
-        if cat_meta[cid]["frequency"] == tier:
+        if _tier_of(cat_meta, cid) == tier:
             Hk[cid] = Hk.get(cid, 0) + 1
-    if not Hk:
-        return {}
 
-    cids, masses = zip(*sorted(Hk.items(), key=lambda kv: kv[1], reverse=True))
-    masses = np.array(masses, dtype=float)
-    masses /= masses.sum()
+    # per-class avg annots per image
+    img_presence = {cid: len(lvis.cat_img_map[cid]) for cid in Hk.keys()}
+    mu = {cid: max(1.0, Hk[cid] / max(1, img_presence[cid])) for cid in Hk.keys()}
 
-    # 2) determine total rare budget if not provided
-    if target_rare_images is None:
-        # conservative default: allocate at least 1 image to top ~10% of rare classes
-        target_rare_images = max(1, int(0.1 * len(cids)))
+    # raw quotas (annots -> images)
+    quota = {cid: min(rare_cap, int(np.ceil(Hk[cid] / mu[cid]))) for cid in Hk.keys()}
 
-    # 3) largest-remainder rounding under rare_cap
-    raw = masses * float(target_rare_images)
-    q = np.floor(raw).astype(int)
-    q = np.minimum(q, rare_cap)                 # apply per-class cap
-    assigned = int(q.sum())
+    if target_rare_images is not None:
+        total = sum(quota.values())
+        if total > 0:
+            scale = target_rare_images / total
+            # scale and round while keeping at least 0 or 1 if you want some coverage
+            quota = {cid: max(0, int(np.floor(q * scale))) for cid, q in quota.items()}
 
-    remaining = target_rare_images - assigned
-    if remaining > 0:
-        rema = raw - np.floor(raw)
-        order = np.argsort(-rema)               # descending remainder
-        i = 0
-        while remaining > 0 and i < len(order):
-            idx = order[i]
-            if q[idx] < rare_cap:
-                q[idx] += 1
-                remaining -= 1
-            i += 1
-
-    return {cids[i]: int(q[i]) for i in range(len(cids))}
-
-
+    return quota  # cid -> images (cap applied)
 
 # ---------- Tier-stratified greedy with global regularizers ----------
 def sample_balanced_greedy(
@@ -217,27 +198,11 @@ def sample_balanced_greedy(
         tier_data[t] = dict(ref=ref, per_img=per_img, keys=keys, key_index=key_index,
                             img_ids=img_ids, X=X, ref_counts=ref_counts)
 
-    # --- NEW: clamp tier budgets to available images that actually contain that tier ---
-    def _images_with_tier(t):
-        X = tier_data[t]["X"]
-        return int((X.sum(axis=1) > 0).sum())
-
-    avail = {t: _images_with_tier(t) for t in "cfr"}
-    Bc = min(Bc, avail["c"])
-    Bf = min(Bf, avail["f"])
-    Br = min(Br, avail["r"])
-
-    if debug:
-        print(f"[feasible budgets] (Bc,Bf,Br)=({Bc},{Bf},{Br})  "
-              f"available=(c{avail['c']}, f{avail['f']}, r{avail['r']})")
-
     if debug:
         for t in "cfr":
             X = tier_data[t]["X"]
             imgs_with_t = int((X.sum(axis=1) > 0).sum())
             print(f"[sanity] tier {t}: keys={X.shape[1]} images_with_tier={imgs_with_t}")
-            print(f"[sanity] tier {t}: keys={tier_data[t]['X'].shape[1]} "
-                  f"images_with_tier={avail[t]}")
 
     # rare quotas (soft)
     rare_quota = estimate_rare_quotas(lvis, cat_meta, tier="r", rare_cap=rare_cap, target_rare_images=Br)
@@ -311,14 +276,6 @@ def sample_balanced_greedy(
                 over += max(0, (rare_img_presence.get(cid, 0) + 1) - rare_quota.get(cid, 0))
         s_cap = float(over)
 
-        # --- NEW: soft reward for underfilled tiers ---
-        gamma = 0.5  # adjust 0.3–1.0
-        if "r" in img_info_cache[iid]["tiers"] and count_imgs_tier["r"] < Br:
-            s_tier -= gamma * (Br - count_imgs_tier["r"]) / max(1, Br)
-        if "c" in img_info_cache[iid]["tiers"] and count_imgs_tier["c"] < Bc:
-            s_tier -= gamma * (Bc - count_imgs_tier["c"]) / max(1, Bc)
-
-
         return s_cs + lambda_tier * s_tier + lambda_cap * s_cap
 
     # greedy loop
@@ -349,21 +306,10 @@ def sample_balanced_greedy(
 
         # optional: tiny hard guard to avoid huge overdraw in any tier
         # allow up to +5% slack beyond target budget for each tier
-        '''
         for t, B in zip("cfr", [Bc, Bf, Br]):
             if count_imgs_tier[t] > int(1.05 * B):
                 # remove candidates that only contribute to this tier
                 all_ids = np.array([iid for iid in all_ids if not (img_info_cache[iid]["tiers"] == {t})], dtype=np.int64)
-        '''
-        # allow up to +0% slack for 'f', +5% for others (keeps f in check earlier)
-        # Effect: as soon as f reaches its budget, pure-frequent images are removed from consideration. 
-        # Mixed images (f+c or f+r) remain, so class-size fitting can still benefit from them while letting c/r catch up.
-        guard = {"c": 1.05, "f": 1.00, "r": 1.05}
-        for t, B in zip("cfr", [Bc, Bf, Br]):
-            if count_imgs_tier[t] > int(guard[t] * B):
-                all_ids = np.array([iid for iid in all_ids
-                                    if not (img_info_cache[iid]["tiers"] == {t})], dtype=np.int64)
-
 
         if debug and len(chosen) % 100 == 0:
             print(f"[greedy] chosen={len(chosen)}  mix=({count_imgs_tier['c']},{count_imgs_tier['f']},{count_imgs_tier['r']}) / ({Bc},{Bf},{Br})")

@@ -17,7 +17,7 @@ def write_lvis_subset(lvis: LVIS, imgs_best_sample, out_json_path):
     for im_id in sel:
         subset["images"].append(lvis.imgs[im_id])
         for aid in lvis.img_ann_map[im_id]:
-            subset["annotations"].append(lvis.anns[aid])
+            subset["annotations"].append(lvis.anns[aid['id']])
     with open(out_json_path, "w") as f:
         json.dump(subset, f)
     return out_json_path

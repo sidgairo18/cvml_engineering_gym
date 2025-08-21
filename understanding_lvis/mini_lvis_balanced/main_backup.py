@@ -1,7 +1,7 @@
 # mini_lvis_balanced/main.py
 import argparse
 from lvis import LVIS
-from sampler import sample_balanced_greedy, compute_tier_stats, compute_target_tier_mix
+from sampler_backup import sample_balanced_greedy, compute_tier_stats, compute_target_tier_mix
 from tools import write_lvis_subset, kept_categories, prune_gt, prune_preds, plot_tier_bars
 
 def parse_args():
