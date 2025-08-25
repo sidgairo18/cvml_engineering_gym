@@ -43,3 +43,24 @@ git push public my-feature:my-feature
 
 
 You can delete the public fork later if you don’t need PRs from it—but keep it if you plan to contribute upstream.
+
+### Tiny Cheat-Sheet
+See remotes: `git remote -v`
+
+Add remote: `git remote add <name> <url>`
+
+Rename remote: `git remote rename <old> <new>`
+
+Change URL: `git remote set-url <name> <url>`
+
+Remove remote: `git remote remove <name>`
+
+Fetch: `git fetch <remote>`
+
+Pull with rebase: `git pull --rebase <remote> <branch>`
+
+Push: `git push <remote> <branch>`
+
+Track: `git push -u <remote> <branch>`
+
+Mirror everything (careful!): `git push --mirror <remote>`
