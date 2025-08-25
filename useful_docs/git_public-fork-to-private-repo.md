@@ -1,4 +1,4 @@
-## Option A (works everywhere): mirror your fork into a new private repo
+## Guide: How to mirror your fork into a new private repo?
 
 ### 1. Create an empty private repo on GitHub (UI or CLI):
 
