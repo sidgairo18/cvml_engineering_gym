@@ -1,0 +1,10 @@
+COCO:
+  images: /path/to/coco/train2017
+  ann:    /path/to/coco/annotations/instances_train2017.json
+  val_images: /path/to/coco/val2017
+  val_ann:    /path/to/coco/annotations/instances_val2017.json
+LVIS:
+  images: /path/to/coco/train2017                 # LVIS uses COCO images
+  ann:    /path/to/lvis/lvis_v1_train.json
+  val_images: /path/to/coco/val2017
+  val_ann:    /path/to/lvis/lvis_v1_val.json
