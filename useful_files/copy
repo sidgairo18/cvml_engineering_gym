@@ -1,0 +1,4 @@
+import os                                                                                     
+# Resolve project root:                                                                       
+project_root = os.getenv("MMDET_PATH")                                                        
+data_root = project_root+'/data/coco/'

@@ -1,0 +1,20 @@
+name: aug-eval
+channels: [conda-forge, pytorch, nvidia]
+dependencies:
+  - python=3.10
+  - pip
+  - numpy
+  - pandas
+  - scipy
+  - scikit-image
+  - opencv
+  - pyyaml
+  - tqdm
+  - pillow
+  - pycocotools
+  - pip:
+      - lvis
+      - open_clip_torch        # for CLIP (quality filters)
+      - torch                  # pin to your cluster version (CUDA/ROCm)
+      - torchvision
+
