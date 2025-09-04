@@ -73,8 +73,8 @@ def compute_pmi(pres, smoothing=1.0, min_images_per_class=50, names=None):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--ds", choices=["COCO", "LVIS"], required=True)
-    ap.add_argument("--cfg", default="augment_eval/configs/dataset_paths.yaml")
-    ap.add_argument("--pairs_cfg", default="augment_eval/configs/pairs_config.yaml")
+    ap.add_argument("--cfg", default="./configs/dataset_paths.yaml")
+    ap.add_argument("--pairs_cfg", default="./configs/pairs_config.yaml")
     ap.add_argument("--outdir", default="augment_eval/outputs/pairs")
     args = ap.parse_args()
 
