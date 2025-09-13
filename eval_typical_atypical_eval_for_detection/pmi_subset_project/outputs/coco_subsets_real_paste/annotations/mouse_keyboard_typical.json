@@ -1,0 +1,43 @@
+{
+  "images_dir": "images",
+  "samples": [
+    {
+      "file_name": "mouse_keyboard_typical_000000.jpg",
+      "height": 360,
+      "width": 640,
+      "image_path": "mouse_keyboard_typical_000000.jpg",
+      "mask_paths": {
+        "A": "masks/mouse_keyboard_typical_000000_A.png",
+        "B": "masks/mouse_keyboard_typical_000000_B.png"
+      },
+      "objects": [
+        {
+          "category": "mouse",
+          "bbox": [
+            219,
+            56,
+            244,
+            175
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "keyboard",
+          "bbox": [
+            482,
+            47,
+            138,
+            79
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "mouse",
+        "b": "keyboard",
+        "type": "typical",
+        "relation": "next to"
+      }
+    }
+  ]
+}

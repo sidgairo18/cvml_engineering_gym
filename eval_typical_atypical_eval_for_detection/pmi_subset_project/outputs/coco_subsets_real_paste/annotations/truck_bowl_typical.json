@@ -1,0 +1,81 @@
+{
+  "images_dir": "images",
+  "samples": [
+    {
+      "file_name": "truck_bowl_typical_000000.jpg",
+      "height": 640,
+      "width": 480,
+      "image_path": "truck_bowl_typical_000000.jpg",
+      "mask_paths": {
+        "A": "masks/truck_bowl_typical_000000_A.png",
+        "B": "masks/truck_bowl_typical_000000_B.png"
+      },
+      "objects": [
+        {
+          "category": "truck",
+          "bbox": [
+            29,
+            161,
+            238,
+            143
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "bowl",
+          "bbox": [
+            21,
+            302,
+            310,
+            185
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "truck",
+        "b": "bowl",
+        "type": "typical",
+        "relation": "on"
+      }
+    },
+    {
+      "file_name": "truck_bowl_typical_000001.jpg",
+      "height": 480,
+      "width": 640,
+      "image_path": "truck_bowl_typical_000001.jpg",
+      "mask_paths": {
+        "A": "masks/truck_bowl_typical_000001_A.png",
+        "B": "masks/truck_bowl_typical_000001_B.png"
+      },
+      "objects": [
+        {
+          "category": "truck",
+          "bbox": [
+            44,
+            189,
+            198,
+            119
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "bowl",
+          "bbox": [
+            51,
+            312,
+            162,
+            97
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "truck",
+        "b": "bowl",
+        "type": "typical",
+        "relation": "on"
+      }
+    }
+  ]
+}

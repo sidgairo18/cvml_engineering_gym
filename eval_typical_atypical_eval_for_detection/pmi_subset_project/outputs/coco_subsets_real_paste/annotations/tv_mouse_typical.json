@@ -1,0 +1,81 @@
+{
+  "images_dir": "images",
+  "samples": [
+    {
+      "file_name": "tv_mouse_typical_000000.jpg",
+      "height": 428,
+      "width": 640,
+      "image_path": "tv_mouse_typical_000000.jpg",
+      "mask_paths": {
+        "A": "masks/tv_mouse_typical_000000_A.png",
+        "B": "masks/tv_mouse_typical_000000_B.png"
+      },
+      "objects": [
+        {
+          "category": "tv",
+          "bbox": [
+            188,
+            56,
+            43,
+            182
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "mouse",
+          "bbox": [
+            241,
+            51,
+            163,
+            100
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "tv",
+        "b": "mouse",
+        "type": "typical",
+        "relation": "next to"
+      }
+    },
+    {
+      "file_name": "tv_mouse_typical_000001.jpg",
+      "height": 480,
+      "width": 640,
+      "image_path": "tv_mouse_typical_000001.jpg",
+      "mask_paths": {
+        "A": "masks/tv_mouse_typical_000001_A.png",
+        "B": "masks/tv_mouse_typical_000001_B.png"
+      },
+      "objects": [
+        {
+          "category": "tv",
+          "bbox": [
+            487,
+            67,
+            11,
+            76
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "mouse",
+          "bbox": [
+            211,
+            70,
+            429,
+            98
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "tv",
+        "b": "mouse",
+        "type": "typical",
+        "relation": "next to"
+      }
+    }
+  ]
+}

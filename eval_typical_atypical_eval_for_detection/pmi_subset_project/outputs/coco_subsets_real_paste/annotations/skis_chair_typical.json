@@ -1,0 +1,81 @@
+{
+  "images_dir": "images",
+  "samples": [
+    {
+      "file_name": "skis_chair_typical_000000.jpg",
+      "height": 426,
+      "width": 640,
+      "image_path": "skis_chair_typical_000000.jpg",
+      "mask_paths": {
+        "A": "masks/skis_chair_typical_000000_A.png",
+        "B": "masks/skis_chair_typical_000000_B.png"
+      },
+      "objects": [
+        {
+          "category": "skis",
+          "bbox": [
+            263,
+            250,
+            79,
+            89
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "chair",
+          "bbox": [
+            269,
+            242,
+            134,
+            184
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "skis",
+        "b": "chair",
+        "type": "typical",
+        "relation": "on"
+      }
+    },
+    {
+      "file_name": "skis_chair_typical_000001.jpg",
+      "height": 478,
+      "width": 640,
+      "image_path": "skis_chair_typical_000001.jpg",
+      "mask_paths": {
+        "A": "masks/skis_chair_typical_000001_A.png",
+        "B": "masks/skis_chair_typical_000001_B.png"
+      },
+      "objects": [
+        {
+          "category": "skis",
+          "bbox": [
+            227,
+            238,
+            84,
+            95
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "chair",
+          "bbox": [
+            218,
+            323,
+            95,
+            155
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "skis",
+        "b": "chair",
+        "type": "typical",
+        "relation": "on"
+      }
+    }
+  ]
+}

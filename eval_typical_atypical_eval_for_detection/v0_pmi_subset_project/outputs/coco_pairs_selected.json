@@ -1,0 +1,365 @@
+{
+  "dataset": "coco",
+  "pairs": [
+    {
+      "a": "mouse",
+      "b": "keyboard",
+      "type": "typical",
+      "source": "pmi",
+      "pmi": 3.585003642423354,
+      "scene": "street",
+      "relation": "next to"
+    },
+    {
+      "a": "microwave",
+      "b": "toaster",
+      "type": "typical",
+      "source": "pmi",
+      "pmi": 3.476177928922302,
+      "scene": "street",
+      "relation": "next to"
+    },
+    {
+      "a": "baseball bat",
+      "b": "baseball glove",
+      "type": "typical",
+      "source": "pmi",
+      "pmi": 3.3370241665871805,
+      "scene": "street",
+      "relation": "next to"
+    },
+    {
+      "a": "apple",
+      "b": "orange",
+      "type": "typical",
+      "source": "pmi",
+      "pmi": 3.2770286203097427,
+      "scene": "street",
+      "relation": "next to"
+    },
+    {
+      "a": "microwave",
+      "b": "oven",
+      "type": "typical",
+      "source": "pmi",
+      "pmi": 3.117683985985696,
+      "scene": "street",
+      "relation": "next to"
+    },
+    {
+      "a": "oven",
+      "b": "toaster",
+      "type": "typical",
+      "source": "pmi",
+      "pmi": 3.0993923542564046,
+      "scene": "street",
+      "relation": "next to"
+    },
+    {
+      "a": "broccoli",
+      "b": "carrot",
+      "type": "typical",
+      "source": "pmi",
+      "pmi": 3.057204488700289,
+      "scene": "street",
+      "relation": "next to"
+    },
+    {
+      "a": "microwave",
+      "b": "refrigerator",
+      "type": "typical",
+      "source": "pmi",
+      "pmi": 3.0353598355261133,
+      "scene": "street",
+      "relation": "next to"
+    },
+    {
+      "a": "laptop",
+      "b": "mouse",
+      "type": "typical",
+      "source": "pmi",
+      "pmi": 2.888901834877778,
+      "scene": "street",
+      "relation": "next to"
+    },
+    {
+      "a": "toaster",
+      "b": "refrigerator",
+      "type": "typical",
+      "source": "pmi",
+      "pmi": 2.8385368197829384,
+      "scene": "street",
+      "relation": "next to"
+    },
+    {
+      "a": "oven",
+      "b": "refrigerator",
+      "type": "typical",
+      "source": "pmi",
+      "pmi": 2.820204948257147,
+      "scene": "street",
+      "relation": "next to"
+    },
+    {
+      "a": "banana",
+      "b": "apple",
+      "type": "typical",
+      "source": "pmi",
+      "pmi": 2.7593670092968874,
+      "scene": "street",
+      "relation": "next to"
+    },
+    {
+      "a": "tv",
+      "b": "keyboard",
+      "type": "typical",
+      "source": "pmi",
+      "pmi": 2.6709213262640747,
+      "scene": "street",
+      "relation": "next to"
+    },
+    {
+      "a": "laptop",
+      "b": "keyboard",
+      "type": "typical",
+      "source": "pmi",
+      "pmi": 2.6707381462425475,
+      "scene": "street",
+      "relation": "next to"
+    },
+    {
+      "a": "sports ball",
+      "b": "tennis racket",
+      "type": "typical",
+      "source": "pmi",
+      "pmi": 2.640875885111188,
+      "scene": "street",
+      "relation": "next to"
+    },
+    {
+      "a": "banana",
+      "b": "orange",
+      "type": "typical",
+      "source": "pmi",
+      "pmi": 2.635636502995094,
+      "scene": "street",
+      "relation": "next to"
+    },
+    {
+      "a": "tv",
+      "b": "mouse",
+      "type": "typical",
+      "source": "pmi",
+      "pmi": 2.630084379061444,
+      "scene": "street",
+      "relation": "next to"
+    },
+    {
+      "a": "fork",
+      "b": "knife",
+      "type": "typical",
+      "source": "pmi",
+      "pmi": 2.560815313840577,
+      "scene": "street",
+      "relation": "next to"
+    },
+    {
+      "a": "hair drier",
+      "b": "toothbrush",
+      "type": "typical",
+      "source": "pmi",
+      "pmi": 2.548719499757054,
+      "scene": "street",
+      "relation": "next to"
+    },
+    {
+      "a": "toaster",
+      "b": "sink",
+      "type": "typical",
+      "source": "pmi",
+      "pmi": 2.5472637483329894,
+      "scene": "street",
+      "relation": "next to"
+    },
+    {
+      "a": "car",
+      "b": "bed",
+      "type": "atypical",
+      "source": "pmi",
+      "pmi": -2.869008601260502,
+      "scene": "indoor room",
+      "relation": "on"
+    },
+    {
+      "a": "traffic light",
+      "b": "dining table",
+      "type": "atypical",
+      "source": "pmi",
+      "pmi": -2.7912596088589394,
+      "scene": "indoor room",
+      "relation": "on"
+    },
+    {
+      "a": "car",
+      "b": "toilet",
+      "type": "atypical",
+      "source": "pmi",
+      "pmi": -2.692053018262397,
+      "scene": "indoor room",
+      "relation": "on"
+    },
+    {
+      "a": "truck",
+      "b": "book",
+      "type": "atypical",
+      "source": "pmi",
+      "pmi": -2.6373459170931697,
+      "scene": "indoor room",
+      "relation": "on"
+    },
+    {
+      "a": "tennis racket",
+      "b": "cup",
+      "type": "atypical",
+      "source": "pmi",
+      "pmi": -2.5444632347810163,
+      "scene": "indoor room",
+      "relation": "on"
+    },
+    {
+      "a": "bus",
+      "b": "dining table",
+      "type": "atypical",
+      "source": "pmi",
+      "pmi": -2.54436790987768,
+      "scene": "indoor room",
+      "relation": "on"
+    },
+    {
+      "a": "skis",
+      "b": "chair",
+      "type": "atypical",
+      "source": "pmi",
+      "pmi": -2.5362747655797584,
+      "scene": "indoor room",
+      "relation": "on"
+    },
+    {
+      "a": "surfboard",
+      "b": "bottle",
+      "type": "atypical",
+      "source": "pmi",
+      "pmi": -2.4933867350335084,
+      "scene": "indoor room",
+      "relation": "on"
+    },
+    {
+      "a": "skateboard",
+      "b": "dining table",
+      "type": "atypical",
+      "source": "pmi",
+      "pmi": -2.446834637256793,
+      "scene": "indoor room",
+      "relation": "on"
+    },
+    {
+      "a": "traffic light",
+      "b": "cup",
+      "type": "atypical",
+      "source": "pmi",
+      "pmi": -2.432700333305087,
+      "scene": "indoor room",
+      "relation": "on"
+    },
+    {
+      "a": "skateboard",
+      "b": "cup",
+      "type": "atypical",
+      "source": "pmi",
+      "pmi": -2.363534914152176,
+      "scene": "indoor room",
+      "relation": "on"
+    },
+    {
+      "a": "sports ball",
+      "b": "dining table",
+      "type": "atypical",
+      "source": "pmi",
+      "pmi": -2.3321841908968586,
+      "scene": "indoor room",
+      "relation": "on"
+    },
+    {
+      "a": "train",
+      "b": "bottle",
+      "type": "atypical",
+      "source": "pmi",
+      "pmi": -2.317424166861404,
+      "scene": "indoor room",
+      "relation": "on"
+    },
+    {
+      "a": "car",
+      "b": "couch",
+      "type": "atypical",
+      "source": "pmi",
+      "pmi": -2.316618433046344,
+      "scene": "indoor room",
+      "relation": "on"
+    },
+    {
+      "a": "person",
+      "b": "zebra",
+      "type": "atypical",
+      "source": "pmi",
+      "pmi": -2.315193515361685,
+      "scene": "indoor room",
+      "relation": "on"
+    },
+    {
+      "a": "horse",
+      "b": "cup",
+      "type": "atypical",
+      "source": "pmi",
+      "pmi": -2.314237718962592,
+      "scene": "indoor room",
+      "relation": "on"
+    },
+    {
+      "a": "truck",
+      "b": "bowl",
+      "type": "atypical",
+      "source": "pmi",
+      "pmi": -2.3061762752840247,
+      "scene": "indoor room",
+      "relation": "on"
+    },
+    {
+      "a": "bench",
+      "b": "sink",
+      "type": "atypical",
+      "source": "pmi",
+      "pmi": -2.277691143338872,
+      "scene": "indoor room",
+      "relation": "on"
+    },
+    {
+      "a": "car",
+      "b": "vase",
+      "type": "atypical",
+      "source": "pmi",
+      "pmi": -2.266468901391757,
+      "scene": "indoor room",
+      "relation": "on"
+    },
+    {
+      "a": "truck",
+      "b": "spoon",
+      "type": "atypical",
+      "source": "pmi",
+      "pmi": -2.224729856424635,
+      "scene": "indoor room",
+      "relation": "on"
+    }
+  ]
+}

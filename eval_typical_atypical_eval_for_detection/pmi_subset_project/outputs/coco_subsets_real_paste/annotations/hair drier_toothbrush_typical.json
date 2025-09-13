@@ -1,0 +1,81 @@
+{
+  "images_dir": "images",
+  "samples": [
+    {
+      "file_name": "hair drier_toothbrush_typical_000000.jpg",
+      "height": 612,
+      "width": 612,
+      "image_path": "hair drier_toothbrush_typical_000000.jpg",
+      "mask_paths": {
+        "A": "masks/hair drier_toothbrush_typical_000000_A.png",
+        "B": "masks/hair drier_toothbrush_typical_000000_B.png"
+      },
+      "objects": [
+        {
+          "category": "hair drier",
+          "bbox": [
+            206,
+            84,
+            140,
+            145
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "toothbrush",
+          "bbox": [
+            357,
+            78,
+            82,
+            164
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "hair drier",
+        "b": "toothbrush",
+        "type": "typical",
+        "relation": "next to"
+      }
+    },
+    {
+      "file_name": "hair drier_toothbrush_typical_000001.jpg",
+      "height": 428,
+      "width": 640,
+      "image_path": "hair drier_toothbrush_typical_000001.jpg",
+      "mask_paths": {
+        "A": "masks/hair drier_toothbrush_typical_000001_A.png",
+        "B": "masks/hair drier_toothbrush_typical_000001_B.png"
+      },
+      "objects": [
+        {
+          "category": "hair drier",
+          "bbox": [
+            498,
+            226,
+            67,
+            70
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "toothbrush",
+          "bbox": [
+            571,
+            217,
+            52,
+            104
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "hair drier",
+        "b": "toothbrush",
+        "type": "typical",
+        "relation": "next to"
+      }
+    }
+  ]
+}

@@ -1,0 +1,81 @@
+{
+  "images_dir": "images",
+  "samples": [
+    {
+      "file_name": "skis_chair_atypical_000000.jpg",
+      "height": 448,
+      "width": 640,
+      "image_path": "skis_chair_atypical_000000.jpg",
+      "mask_paths": {
+        "A": "masks/skis_chair_atypical_000000_A.png",
+        "B": "masks/skis_chair_atypical_000000_B.png"
+      },
+      "objects": [
+        {
+          "category": "skis",
+          "bbox": [
+            186,
+            143,
+            72,
+            82
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "chair",
+          "bbox": [
+            177,
+            231,
+            116,
+            189
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "skis",
+        "b": "chair",
+        "type": "atypical",
+        "relation": "on"
+      }
+    },
+    {
+      "file_name": "skis_chair_atypical_000001.jpg",
+      "height": 640,
+      "width": 480,
+      "image_path": "skis_chair_atypical_000001.jpg",
+      "mask_paths": {
+        "A": "masks/skis_chair_atypical_000001_A.png",
+        "B": "masks/skis_chair_atypical_000001_B.png"
+      },
+      "objects": [
+        {
+          "category": "skis",
+          "bbox": [
+            144,
+            480,
+            225,
+            130
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "chair",
+          "bbox": [
+            134,
+            504,
+            97,
+            136
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "skis",
+        "b": "chair",
+        "type": "atypical",
+        "relation": "on"
+      }
+    }
+  ]
+}

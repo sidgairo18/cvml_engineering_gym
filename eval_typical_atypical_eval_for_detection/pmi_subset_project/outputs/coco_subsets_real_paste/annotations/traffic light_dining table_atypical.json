@@ -1,0 +1,81 @@
+{
+  "images_dir": "images",
+  "samples": [
+    {
+      "file_name": "traffic light_dining table_atypical_000000.jpg",
+      "height": 426,
+      "width": 640,
+      "image_path": "traffic light_dining table_atypical_000000.jpg",
+      "mask_paths": {
+        "A": "masks/traffic light_dining table_atypical_000000_A.png",
+        "B": "masks/traffic light_dining table_atypical_000000_B.png"
+      },
+      "objects": [
+        {
+          "category": "traffic light",
+          "bbox": [
+            158,
+            198,
+            167,
+            167
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "dining table",
+          "bbox": [
+            150,
+            294,
+            122,
+            132
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "traffic light",
+        "b": "dining table",
+        "type": "atypical",
+        "relation": "on"
+      }
+    },
+    {
+      "file_name": "traffic light_dining table_atypical_000001.jpg",
+      "height": 426,
+      "width": 640,
+      "image_path": "traffic light_dining table_atypical_000001.jpg",
+      "mask_paths": {
+        "A": "masks/traffic light_dining table_atypical_000001_A.png",
+        "B": "masks/traffic light_dining table_atypical_000001_B.png"
+      },
+      "objects": [
+        {
+          "category": "traffic light",
+          "bbox": [
+            275,
+            55,
+            170,
+            170
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "dining table",
+          "bbox": [
+            278,
+            229,
+            97,
+            105
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "traffic light",
+        "b": "dining table",
+        "type": "atypical",
+        "relation": "on"
+      }
+    }
+  ]
+}

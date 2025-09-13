@@ -1,0 +1,43 @@
+{
+  "images_dir": "images",
+  "samples": [
+    {
+      "file_name": "car_bed_atypical_000001.jpg",
+      "height": 480,
+      "width": 640,
+      "image_path": "car_bed_atypical_000001.jpg",
+      "mask_paths": {
+        "A": "masks/car_bed_atypical_000001_A.png",
+        "B": "masks/car_bed_atypical_000001_B.png"
+      },
+      "objects": [
+        {
+          "category": "car",
+          "bbox": [
+            212,
+            186,
+            91,
+            79
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "bed",
+          "bbox": [
+            219,
+            269,
+            139,
+            96
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "car",
+        "b": "bed",
+        "type": "atypical",
+        "relation": "on"
+      }
+    }
+  ]
+}

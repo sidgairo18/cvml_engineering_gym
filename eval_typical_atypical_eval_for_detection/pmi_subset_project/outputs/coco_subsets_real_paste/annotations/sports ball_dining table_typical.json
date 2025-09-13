@@ -1,0 +1,81 @@
+{
+  "images_dir": "images",
+  "samples": [
+    {
+      "file_name": "sports ball_dining table_typical_000000.jpg",
+      "height": 640,
+      "width": 480,
+      "image_path": "sports ball_dining table_typical_000000.jpg",
+      "mask_paths": {
+        "A": "masks/sports ball_dining table_typical_000000_A.png",
+        "B": "masks/sports ball_dining table_typical_000000_B.png"
+      },
+      "objects": [
+        {
+          "category": "sports ball",
+          "bbox": [
+            126,
+            36,
+            154,
+            144
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "dining table",
+          "bbox": [
+            116,
+            190,
+            133,
+            144
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "sports ball",
+        "b": "dining table",
+        "type": "typical",
+        "relation": "on"
+      }
+    },
+    {
+      "file_name": "sports ball_dining table_typical_000001.jpg",
+      "height": 480,
+      "width": 640,
+      "image_path": "sports ball_dining table_typical_000001.jpg",
+      "mask_paths": {
+        "A": "masks/sports ball_dining table_typical_000001_A.png",
+        "B": "masks/sports ball_dining table_typical_000001_B.png"
+      },
+      "objects": [
+        {
+          "category": "sports ball",
+          "bbox": [
+            197,
+            1,
+            130,
+            122
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "dining table",
+          "bbox": [
+            187,
+            132,
+            132,
+            142
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "sports ball",
+        "b": "dining table",
+        "type": "typical",
+        "relation": "on"
+      }
+    }
+  ]
+}

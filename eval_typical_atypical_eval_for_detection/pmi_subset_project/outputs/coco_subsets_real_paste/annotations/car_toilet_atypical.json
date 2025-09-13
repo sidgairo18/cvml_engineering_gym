@@ -1,0 +1,81 @@
+{
+  "images_dir": "images",
+  "samples": [
+    {
+      "file_name": "car_toilet_atypical_000000.jpg",
+      "height": 452,
+      "width": 500,
+      "image_path": "car_toilet_atypical_000000.jpg",
+      "mask_paths": {
+        "A": "masks/car_toilet_atypical_000000_A.png",
+        "B": "masks/car_toilet_atypical_000000_B.png"
+      },
+      "objects": [
+        {
+          "category": "car",
+          "bbox": [
+            8,
+            327,
+            122,
+            70
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "toilet",
+          "bbox": [
+            9,
+            340,
+            160,
+            112
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "car",
+        "b": "toilet",
+        "type": "atypical",
+        "relation": "on"
+      }
+    },
+    {
+      "file_name": "car_toilet_atypical_000001.jpg",
+      "height": 387,
+      "width": 640,
+      "image_path": "car_toilet_atypical_000001.jpg",
+      "mask_paths": {
+        "A": "masks/car_toilet_atypical_000001_A.png",
+        "B": "masks/car_toilet_atypical_000001_B.png"
+      },
+      "objects": [
+        {
+          "category": "car",
+          "bbox": [
+            339,
+            167,
+            120,
+            105
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "toilet",
+          "bbox": [
+            336,
+            280,
+            146,
+            102
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "car",
+        "b": "toilet",
+        "type": "atypical",
+        "relation": "on"
+      }
+    }
+  ]
+}

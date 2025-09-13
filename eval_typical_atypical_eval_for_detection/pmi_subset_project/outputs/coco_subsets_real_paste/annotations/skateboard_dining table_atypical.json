@@ -1,0 +1,81 @@
+{
+  "images_dir": "images",
+  "samples": [
+    {
+      "file_name": "skateboard_dining table_atypical_000000.jpg",
+      "height": 640,
+      "width": 427,
+      "image_path": "skateboard_dining table_atypical_000000.jpg",
+      "mask_paths": {
+        "A": "masks/skateboard_dining table_atypical_000000_A.png",
+        "B": "masks/skateboard_dining table_atypical_000000_B.png"
+      },
+      "objects": [
+        {
+          "category": "skateboard",
+          "bbox": [
+            174,
+            191,
+            76,
+            76
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "dining table",
+          "bbox": [
+            177,
+            272,
+            136,
+            148
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "skateboard",
+        "b": "dining table",
+        "type": "atypical",
+        "relation": "on"
+      }
+    },
+    {
+      "file_name": "skateboard_dining table_atypical_000001.jpg",
+      "height": 480,
+      "width": 640,
+      "image_path": "skateboard_dining table_atypical_000001.jpg",
+      "mask_paths": {
+        "A": "masks/skateboard_dining table_atypical_000001_A.png",
+        "B": "masks/skateboard_dining table_atypical_000001_B.png"
+      },
+      "objects": [
+        {
+          "category": "skateboard",
+          "bbox": [
+            307,
+            17,
+            126,
+            126
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "dining table",
+          "bbox": [
+            307,
+            138,
+            148,
+            160
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "skateboard",
+        "b": "dining table",
+        "type": "atypical",
+        "relation": "on"
+      }
+    }
+  ]
+}

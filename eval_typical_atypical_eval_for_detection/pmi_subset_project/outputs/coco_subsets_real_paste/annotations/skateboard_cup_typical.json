@@ -1,0 +1,43 @@
+{
+  "images_dir": "images",
+  "samples": [
+    {
+      "file_name": "skateboard_cup_typical_000000.jpg",
+      "height": 427,
+      "width": 640,
+      "image_path": "skateboard_cup_typical_000000.jpg",
+      "mask_paths": {
+        "A": "masks/skateboard_cup_typical_000000_A.png",
+        "B": "masks/skateboard_cup_typical_000000_B.png"
+      },
+      "objects": [
+        {
+          "category": "skateboard",
+          "bbox": [
+            258,
+            132,
+            152,
+            152
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "cup",
+          "bbox": [
+            257,
+            279,
+            114,
+            73
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "skateboard",
+        "b": "cup",
+        "type": "typical",
+        "relation": "on"
+      }
+    }
+  ]
+}

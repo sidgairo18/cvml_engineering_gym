@@ -1,0 +1,43 @@
+{
+  "images_dir": "images",
+  "samples": [
+    {
+      "file_name": "oven_refrigerator_atypical_000000.jpg",
+      "height": 425,
+      "width": 640,
+      "image_path": "oven_refrigerator_atypical_000000.jpg",
+      "mask_paths": {
+        "A": "masks/oven_refrigerator_atypical_000000_A.png",
+        "B": "masks/oven_refrigerator_atypical_000000_B.png"
+      },
+      "objects": [
+        {
+          "category": "oven",
+          "bbox": [
+            404,
+            210,
+            206,
+            169
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "refrigerator",
+          "bbox": [
+            598,
+            214,
+            42,
+            139
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "oven",
+        "b": "refrigerator",
+        "type": "atypical",
+        "relation": "next to"
+      }
+    }
+  ]
+}

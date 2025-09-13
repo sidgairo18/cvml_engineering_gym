@@ -1,0 +1,43 @@
+{
+  "images_dir": "images",
+  "samples": [
+    {
+      "file_name": "truck_spoon_atypical_000000.jpg",
+      "height": 375,
+      "width": 500,
+      "image_path": "truck_spoon_atypical_000000.jpg",
+      "mask_paths": {
+        "A": "masks/truck_spoon_atypical_000000_A.png",
+        "B": "masks/truck_spoon_atypical_000000_B.png"
+      },
+      "objects": [
+        {
+          "category": "truck",
+          "bbox": [
+            265,
+            37,
+            190,
+            114
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "spoon",
+          "bbox": [
+            262,
+            160,
+            189,
+            81
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "truck",
+        "b": "spoon",
+        "type": "atypical",
+        "relation": "on"
+      }
+    }
+  ]
+}

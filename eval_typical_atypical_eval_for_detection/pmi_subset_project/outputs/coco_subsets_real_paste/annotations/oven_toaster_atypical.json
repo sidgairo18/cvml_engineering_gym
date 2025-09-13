@@ -1,0 +1,81 @@
+{
+  "images_dir": "images",
+  "samples": [
+    {
+      "file_name": "oven_toaster_atypical_000000.jpg",
+      "height": 640,
+      "width": 424,
+      "image_path": "oven_toaster_atypical_000000.jpg",
+      "mask_paths": {
+        "A": "masks/oven_toaster_atypical_000000_A.png",
+        "B": "masks/oven_toaster_atypical_000000_B.png"
+      },
+      "objects": [
+        {
+          "category": "oven",
+          "bbox": [
+            198,
+            438,
+            172,
+            141
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "toaster",
+          "bbox": [
+            204,
+            446,
+            220,
+            185
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "oven",
+        "b": "toaster",
+        "type": "atypical",
+        "relation": "next to"
+      }
+    },
+    {
+      "file_name": "oven_toaster_atypical_000001.jpg",
+      "height": 480,
+      "width": 640,
+      "image_path": "oven_toaster_atypical_000001.jpg",
+      "mask_paths": {
+        "A": "masks/oven_toaster_atypical_000001_A.png",
+        "B": "masks/oven_toaster_atypical_000001_B.png"
+      },
+      "objects": [
+        {
+          "category": "oven",
+          "bbox": [
+            420,
+            329,
+            118,
+            98
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "toaster",
+          "bbox": [
+            508,
+            337,
+            132,
+            111
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "oven",
+        "b": "toaster",
+        "type": "atypical",
+        "relation": "next to"
+      }
+    }
+  ]
+}

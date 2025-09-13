@@ -1,0 +1,81 @@
+{
+  "images_dir": "images",
+  "samples": [
+    {
+      "file_name": "car_vase_atypical_000000.jpg",
+      "height": 640,
+      "width": 480,
+      "image_path": "car_vase_atypical_000000.jpg",
+      "mask_paths": {
+        "A": "masks/car_vase_atypical_000000_A.png",
+        "B": "masks/car_vase_atypical_000000_B.png"
+      },
+      "objects": [
+        {
+          "category": "car",
+          "bbox": [
+            17,
+            484,
+            89,
+            78
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "vase",
+          "bbox": [
+            17,
+            561,
+            32,
+            65
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "car",
+        "b": "vase",
+        "type": "atypical",
+        "relation": "on"
+      }
+    },
+    {
+      "file_name": "car_vase_atypical_000001.jpg",
+      "height": 427,
+      "width": 640,
+      "image_path": "car_vase_atypical_000001.jpg",
+      "mask_paths": {
+        "A": "masks/car_vase_atypical_000001_A.png",
+        "B": "masks/car_vase_atypical_000001_B.png"
+      },
+      "objects": [
+        {
+          "category": "car",
+          "bbox": [
+            269,
+            54,
+            167,
+            146
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "vase",
+          "bbox": [
+            267,
+            213,
+            106,
+            166
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "car",
+        "b": "vase",
+        "type": "atypical",
+        "relation": "on"
+      }
+    }
+  ]
+}

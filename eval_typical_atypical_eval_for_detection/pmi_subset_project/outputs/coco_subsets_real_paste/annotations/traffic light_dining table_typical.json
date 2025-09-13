@@ -1,0 +1,43 @@
+{
+  "images_dir": "images",
+  "samples": [
+    {
+      "file_name": "traffic light_dining table_typical_000000.jpg",
+      "height": 429,
+      "width": 640,
+      "image_path": "traffic light_dining table_typical_000000.jpg",
+      "mask_paths": {
+        "A": "masks/traffic light_dining table_typical_000000_A.png",
+        "B": "masks/traffic light_dining table_typical_000000_B.png"
+      },
+      "objects": [
+        {
+          "category": "traffic light",
+          "bbox": [
+            89,
+            2,
+            122,
+            122
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "dining table",
+          "bbox": [
+            94,
+            125,
+            84,
+            89
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "traffic light",
+        "b": "dining table",
+        "type": "typical",
+        "relation": "on"
+      }
+    }
+  ]
+}

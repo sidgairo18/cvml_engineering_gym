@@ -1,0 +1,81 @@
+{
+  "images_dir": "images",
+  "samples": [
+    {
+      "file_name": "train_bottle_atypical_000000.jpg",
+      "height": 281,
+      "width": 500,
+      "image_path": "train_bottle_atypical_000000.jpg",
+      "mask_paths": {
+        "A": "masks/train_bottle_atypical_000000_A.png",
+        "B": "masks/train_bottle_atypical_000000_B.png"
+      },
+      "objects": [
+        {
+          "category": "train",
+          "bbox": [
+            84,
+            8,
+            177,
+            138
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "bottle",
+          "bbox": [
+            83,
+            141,
+            39,
+            133
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "train",
+        "b": "bottle",
+        "type": "atypical",
+        "relation": "on"
+      }
+    },
+    {
+      "file_name": "train_bottle_atypical_000001.jpg",
+      "height": 640,
+      "width": 480,
+      "image_path": "train_bottle_atypical_000001.jpg",
+      "mask_paths": {
+        "A": "masks/train_bottle_atypical_000001_A.png",
+        "B": "masks/train_bottle_atypical_000001_B.png"
+      },
+      "objects": [
+        {
+          "category": "train",
+          "bbox": [
+            168,
+            261,
+            177,
+            138
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "bottle",
+          "bbox": [
+            163,
+            407,
+            101,
+            123
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "train",
+        "b": "bottle",
+        "type": "atypical",
+        "relation": "on"
+      }
+    }
+  ]
+}

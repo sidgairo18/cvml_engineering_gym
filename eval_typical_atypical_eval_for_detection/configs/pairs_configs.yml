@@ -1,7 +1,0 @@
-min_images_per_class: 50     # ignore ultra-rare categories when mining PMI
-top_k_typical: 25            # pick this many top-PMI pairs
-bottom_k_atypical: 25        # pick this many low-PMI plausible pairs
-smoothing: 1.0               # add-k smoothing in counts
-llm_merge:
-  use_llm: false             # set true if you want to merge with LLM suggestions
-  llm_pairs_json: augment_eval/outputs/pairs/llm_suggestions.json

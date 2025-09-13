@@ -1,0 +1,43 @@
+{
+  "images_dir": "images",
+  "samples": [
+    {
+      "file_name": "microwave_toaster_atypical_000000.jpg",
+      "height": 480,
+      "width": 640,
+      "image_path": "microwave_toaster_atypical_000000.jpg",
+      "mask_paths": {
+        "A": "masks/microwave_toaster_atypical_000000_A.png",
+        "B": "masks/microwave_toaster_atypical_000000_B.png"
+      },
+      "objects": [
+        {
+          "category": "microwave",
+          "bbox": [
+            163,
+            44,
+            162,
+            138
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "toaster",
+          "bbox": [
+            339,
+            40,
+            186,
+            157
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "microwave",
+        "b": "toaster",
+        "type": "atypical",
+        "relation": "next to"
+      }
+    }
+  ]
+}

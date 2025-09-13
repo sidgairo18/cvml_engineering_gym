@@ -1,0 +1,5 @@
+model:
+  name: resnet50
+  lr: 0.001
+trainer:
+  epochs: 10

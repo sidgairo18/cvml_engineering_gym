@@ -1,0 +1,6 @@
+defaults:
+  - model: resnet
+
+trainer:
+  epochs: 10
+

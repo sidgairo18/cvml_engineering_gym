@@ -1,0 +1,81 @@
+{
+  "images_dir": "images",
+  "samples": [
+    {
+      "file_name": "microwave_refrigerator_atypical_000000.jpg",
+      "height": 480,
+      "width": 640,
+      "image_path": "microwave_refrigerator_atypical_000000.jpg",
+      "mask_paths": {
+        "A": "masks/microwave_refrigerator_atypical_000000_A.png",
+        "B": "masks/microwave_refrigerator_atypical_000000_B.png"
+      },
+      "objects": [
+        {
+          "category": "microwave",
+          "bbox": [
+            275,
+            17,
+            182,
+            155
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "refrigerator",
+          "bbox": [
+            472,
+            7,
+            24,
+            79
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "microwave",
+        "b": "refrigerator",
+        "type": "atypical",
+        "relation": "next to"
+      }
+    },
+    {
+      "file_name": "microwave_refrigerator_atypical_000001.jpg",
+      "height": 351,
+      "width": 500,
+      "image_path": "microwave_refrigerator_atypical_000001.jpg",
+      "mask_paths": {
+        "A": "masks/microwave_refrigerator_atypical_000001_A.png",
+        "B": "masks/microwave_refrigerator_atypical_000001_B.png"
+      },
+      "objects": [
+        {
+          "category": "microwave",
+          "bbox": [
+            1,
+            82,
+            201,
+            171
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "refrigerator",
+          "bbox": [
+            220,
+            91,
+            33,
+            109
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "microwave",
+        "b": "refrigerator",
+        "type": "atypical",
+        "relation": "next to"
+      }
+    }
+  ]
+}

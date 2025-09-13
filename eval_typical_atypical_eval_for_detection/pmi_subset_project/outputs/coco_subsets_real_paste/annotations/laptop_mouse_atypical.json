@@ -1,0 +1,81 @@
+{
+  "images_dir": "images",
+  "samples": [
+    {
+      "file_name": "laptop_mouse_atypical_000000.jpg",
+      "height": 427,
+      "width": 640,
+      "image_path": "laptop_mouse_atypical_000000.jpg",
+      "mask_paths": {
+        "A": "masks/laptop_mouse_atypical_000000_A.png",
+        "B": "masks/laptop_mouse_atypical_000000_B.png"
+      },
+      "objects": [
+        {
+          "category": "laptop",
+          "bbox": [
+            122,
+            61,
+            132,
+            100
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "mouse",
+          "bbox": [
+            266,
+            63,
+            111,
+            80
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "laptop",
+        "b": "mouse",
+        "type": "atypical",
+        "relation": "next to"
+      }
+    },
+    {
+      "file_name": "laptop_mouse_atypical_000001.jpg",
+      "height": 640,
+      "width": 480,
+      "image_path": "laptop_mouse_atypical_000001.jpg",
+      "mask_paths": {
+        "A": "masks/laptop_mouse_atypical_000001_A.png",
+        "B": "masks/laptop_mouse_atypical_000001_B.png"
+      },
+      "objects": [
+        {
+          "category": "laptop",
+          "bbox": [
+            34,
+            154,
+            194,
+            147
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "mouse",
+          "bbox": [
+            134,
+            146,
+            346,
+            79
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "laptop",
+        "b": "mouse",
+        "type": "atypical",
+        "relation": "next to"
+      }
+    }
+  ]
+}

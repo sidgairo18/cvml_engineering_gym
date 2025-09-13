@@ -1,0 +1,81 @@
+{
+  "images_dir": "images",
+  "samples": [
+    {
+      "file_name": "toaster_refrigerator_atypical_000000.jpg",
+      "height": 480,
+      "width": 640,
+      "image_path": "toaster_refrigerator_atypical_000000.jpg",
+      "mask_paths": {
+        "A": "masks/toaster_refrigerator_atypical_000000_A.png",
+        "B": "masks/toaster_refrigerator_atypical_000000_B.png"
+      },
+      "objects": [
+        {
+          "category": "toaster",
+          "bbox": [
+            14,
+            314,
+            144,
+            121
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "refrigerator",
+          "bbox": [
+            176,
+            304,
+            41,
+            137
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "toaster",
+        "b": "refrigerator",
+        "type": "atypical",
+        "relation": "next to"
+      }
+    },
+    {
+      "file_name": "toaster_refrigerator_atypical_000001.jpg",
+      "height": 482,
+      "width": 640,
+      "image_path": "toaster_refrigerator_atypical_000001.jpg",
+      "mask_paths": {
+        "A": "masks/toaster_refrigerator_atypical_000001_A.png",
+        "B": "masks/toaster_refrigerator_atypical_000001_B.png"
+      },
+      "objects": [
+        {
+          "category": "toaster",
+          "bbox": [
+            437,
+            292,
+            115,
+            96
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "refrigerator",
+          "bbox": [
+            566,
+            294,
+            28,
+            92
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "toaster",
+        "b": "refrigerator",
+        "type": "atypical",
+        "relation": "next to"
+      }
+    }
+  ]
+}

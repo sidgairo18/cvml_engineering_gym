@@ -1,0 +1,4 @@
+name: resnet50
+lr: 0.001
+width: 64
+

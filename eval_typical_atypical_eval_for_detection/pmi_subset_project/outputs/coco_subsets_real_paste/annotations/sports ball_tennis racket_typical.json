@@ -1,0 +1,81 @@
+{
+  "images_dir": "images",
+  "samples": [
+    {
+      "file_name": "sports ball_tennis racket_typical_000000.jpg",
+      "height": 480,
+      "width": 640,
+      "image_path": "sports ball_tennis racket_typical_000000.jpg",
+      "mask_paths": {
+        "A": "masks/sports ball_tennis racket_typical_000000_A.png",
+        "B": "masks/sports ball_tennis racket_typical_000000_B.png"
+      },
+      "objects": [
+        {
+          "category": "sports ball",
+          "bbox": [
+            315,
+            142,
+            140,
+            131
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "tennis racket",
+          "bbox": [
+            469,
+            136,
+            89,
+            94
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "sports ball",
+        "b": "tennis racket",
+        "type": "typical",
+        "relation": "next to"
+      }
+    },
+    {
+      "file_name": "sports ball_tennis racket_typical_000001.jpg",
+      "height": 612,
+      "width": 612,
+      "image_path": "sports ball_tennis racket_typical_000001.jpg",
+      "mask_paths": {
+        "A": "masks/sports ball_tennis racket_typical_000001_A.png",
+        "B": "masks/sports ball_tennis racket_typical_000001_B.png"
+      },
+      "objects": [
+        {
+          "category": "sports ball",
+          "bbox": [
+            154,
+            321,
+            118,
+            113
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "tennis racket",
+          "bbox": [
+            284,
+            329,
+            180,
+            191
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "sports ball",
+        "b": "tennis racket",
+        "type": "typical",
+        "relation": "next to"
+      }
+    }
+  ]
+}

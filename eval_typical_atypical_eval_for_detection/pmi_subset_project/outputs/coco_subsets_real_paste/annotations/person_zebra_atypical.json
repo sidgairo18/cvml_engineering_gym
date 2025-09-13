@@ -1,0 +1,43 @@
+{
+  "images_dir": "images",
+  "samples": [
+    {
+      "file_name": "person_zebra_atypical_000000.jpg",
+      "height": 480,
+      "width": 640,
+      "image_path": "person_zebra_atypical_000000.jpg",
+      "mask_paths": {
+        "A": "masks/person_zebra_atypical_000000_A.png",
+        "B": "masks/person_zebra_atypical_000000_B.png"
+      },
+      "objects": [
+        {
+          "category": "person",
+          "bbox": [
+            454,
+            367,
+            44,
+            86
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "zebra",
+          "bbox": [
+            461,
+            390,
+            157,
+            90
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "person",
+        "b": "zebra",
+        "type": "atypical",
+        "relation": "on"
+      }
+    }
+  ]
+}

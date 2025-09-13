@@ -1,0 +1,43 @@
+{
+  "images_dir": "images",
+  "samples": [
+    {
+      "file_name": "truck_book_typical_000000.jpg",
+      "height": 640,
+      "width": 480,
+      "image_path": "truck_book_typical_000000.jpg",
+      "mask_paths": {
+        "A": "masks/truck_book_typical_000000_A.png",
+        "B": "masks/truck_book_typical_000000_B.png"
+      },
+      "objects": [
+        {
+          "category": "truck",
+          "bbox": [
+            76,
+            312,
+            222,
+            133
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "book",
+          "bbox": [
+            78,
+            454,
+            289,
+            88
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "truck",
+        "b": "book",
+        "type": "typical",
+        "relation": "on"
+      }
+    }
+  ]
+}

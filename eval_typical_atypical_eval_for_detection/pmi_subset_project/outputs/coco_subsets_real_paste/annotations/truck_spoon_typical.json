@@ -1,0 +1,81 @@
+{
+  "images_dir": "images",
+  "samples": [
+    {
+      "file_name": "truck_spoon_typical_000000.jpg",
+      "height": 361,
+      "width": 640,
+      "image_path": "truck_spoon_typical_000000.jpg",
+      "mask_paths": {
+        "A": "masks/truck_spoon_typical_000000_A.png",
+        "B": "masks/truck_spoon_typical_000000_B.png"
+      },
+      "objects": [
+        {
+          "category": "truck",
+          "bbox": [
+            17,
+            152,
+            238,
+            143
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "spoon",
+          "bbox": [
+            14,
+            180,
+            422,
+            181
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "truck",
+        "b": "spoon",
+        "type": "typical",
+        "relation": "on"
+      }
+    },
+    {
+      "file_name": "truck_spoon_typical_000001.jpg",
+      "height": 640,
+      "width": 480,
+      "image_path": "truck_spoon_typical_000001.jpg",
+      "mask_paths": {
+        "A": "masks/truck_spoon_typical_000001_A.png",
+        "B": "masks/truck_spoon_typical_000001_B.png"
+      },
+      "objects": [
+        {
+          "category": "truck",
+          "bbox": [
+            132,
+            529,
+            127,
+            76
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "spoon",
+          "bbox": [
+            137,
+            528,
+            261,
+            112
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "truck",
+        "b": "spoon",
+        "type": "typical",
+        "relation": "on"
+      }
+    }
+  ]
+}

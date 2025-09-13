@@ -1,0 +1,81 @@
+{
+  "images_dir": "images",
+  "samples": [
+    {
+      "file_name": "car_bed_typical_000000.jpg",
+      "height": 427,
+      "width": 640,
+      "image_path": "car_bed_typical_000000.jpg",
+      "mask_paths": {
+        "A": "masks/car_bed_typical_000000_A.png",
+        "B": "masks/car_bed_typical_000000_B.png"
+      },
+      "objects": [
+        {
+          "category": "car",
+          "bbox": [
+            124,
+            92,
+            234,
+            132
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "bed",
+          "bbox": [
+            115,
+            227,
+            227,
+            158
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "car",
+        "b": "bed",
+        "type": "typical",
+        "relation": "on"
+      }
+    },
+    {
+      "file_name": "car_bed_typical_000001.jpg",
+      "height": 370,
+      "width": 640,
+      "image_path": "car_bed_typical_000001.jpg",
+      "mask_paths": {
+        "A": "masks/car_bed_typical_000001_A.png",
+        "B": "masks/car_bed_typical_000001_B.png"
+      },
+      "objects": [
+        {
+          "category": "car",
+          "bbox": [
+            45,
+            88,
+            255,
+            146
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "bed",
+          "bbox": [
+            52,
+            208,
+            232,
+            162
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "car",
+        "b": "bed",
+        "type": "typical",
+        "relation": "on"
+      }
+    }
+  ]
+}

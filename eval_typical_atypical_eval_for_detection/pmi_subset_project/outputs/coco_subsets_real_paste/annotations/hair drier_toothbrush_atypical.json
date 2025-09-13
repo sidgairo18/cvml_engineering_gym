@@ -1,0 +1,43 @@
+{
+  "images_dir": "images",
+  "samples": [
+    {
+      "file_name": "hair drier_toothbrush_atypical_000000.jpg",
+      "height": 640,
+      "width": 480,
+      "image_path": "hair drier_toothbrush_atypical_000000.jpg",
+      "mask_paths": {
+        "A": "masks/hair drier_toothbrush_atypical_000000_A.png",
+        "B": "masks/hair drier_toothbrush_atypical_000000_B.png"
+      },
+      "objects": [
+        {
+          "category": "hair drier",
+          "bbox": [
+            236,
+            159,
+            164,
+            170
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "toothbrush",
+          "bbox": [
+            385,
+            155,
+            95,
+            191
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "hair drier",
+        "b": "toothbrush",
+        "type": "atypical",
+        "relation": "next to"
+      }
+    }
+  ]
+}

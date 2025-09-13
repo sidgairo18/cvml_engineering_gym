@@ -1,0 +1,43 @@
+{
+  "images_dir": "images",
+  "samples": [
+    {
+      "file_name": "microwave_oven_typical_000000.jpg",
+      "height": 427,
+      "width": 640,
+      "image_path": "microwave_oven_typical_000000.jpg",
+      "mask_paths": {
+        "A": "masks/microwave_oven_typical_000000_A.png",
+        "B": "masks/microwave_oven_typical_000000_B.png"
+      },
+      "objects": [
+        {
+          "category": "microwave",
+          "bbox": [
+            240,
+            48,
+            154,
+            131
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "oven",
+          "bbox": [
+            404,
+            42,
+            203,
+            166
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "microwave",
+        "b": "oven",
+        "type": "typical",
+        "relation": "next to"
+      }
+    }
+  ]
+}

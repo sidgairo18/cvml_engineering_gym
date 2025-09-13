@@ -1,0 +1,43 @@
+{
+  "images_dir": "images",
+  "samples": [
+    {
+      "file_name": "horse_cup_typical_000001.jpg",
+      "height": 429,
+      "width": 640,
+      "image_path": "horse_cup_typical_000001.jpg",
+      "mask_paths": {
+        "A": "masks/horse_cup_typical_000001_A.png",
+        "B": "masks/horse_cup_typical_000001_B.png"
+      },
+      "objects": [
+        {
+          "category": "horse",
+          "bbox": [
+            179,
+            121,
+            279,
+            191
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "cup",
+          "bbox": [
+            173,
+            315,
+            119,
+            76
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "horse",
+        "b": "cup",
+        "type": "typical",
+        "relation": "on"
+      }
+    }
+  ]
+}

@@ -1,0 +1,81 @@
+{
+  "images_dir": "images",
+  "samples": [
+    {
+      "file_name": "banana_apple_typical_000000.jpg",
+      "height": 333,
+      "width": 500,
+      "image_path": "banana_apple_typical_000000.jpg",
+      "mask_paths": {
+        "A": "masks/banana_apple_typical_000000_A.png",
+        "B": "masks/banana_apple_typical_000000_B.png"
+      },
+      "objects": [
+        {
+          "category": "banana",
+          "bbox": [
+            79,
+            81,
+            130,
+            143
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "apple",
+          "bbox": [
+            224,
+            86,
+            96,
+            107
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "banana",
+        "b": "apple",
+        "type": "typical",
+        "relation": "next to"
+      }
+    },
+    {
+      "file_name": "banana_apple_typical_000001.jpg",
+      "height": 427,
+      "width": 640,
+      "image_path": "banana_apple_typical_000001.jpg",
+      "mask_paths": {
+        "A": "masks/banana_apple_typical_000001_A.png",
+        "B": "masks/banana_apple_typical_000001_B.png"
+      },
+      "objects": [
+        {
+          "category": "banana",
+          "bbox": [
+            510,
+            155,
+            101,
+            93
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "apple",
+          "bbox": [
+            565,
+            155,
+            75,
+            84
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "banana",
+        "b": "apple",
+        "type": "typical",
+        "relation": "next to"
+      }
+    }
+  ]
+}

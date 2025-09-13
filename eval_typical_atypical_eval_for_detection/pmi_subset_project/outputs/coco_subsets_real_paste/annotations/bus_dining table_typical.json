@@ -1,0 +1,81 @@
+{
+  "images_dir": "images",
+  "samples": [
+    {
+      "file_name": "bus_dining table_typical_000000.jpg",
+      "height": 500,
+      "width": 500,
+      "image_path": "bus_dining table_typical_000000.jpg",
+      "mask_paths": {
+        "A": "masks/bus_dining table_typical_000000_A.png",
+        "B": "masks/bus_dining table_typical_000000_B.png"
+      },
+      "objects": [
+        {
+          "category": "bus",
+          "bbox": [
+            351,
+            345,
+            117,
+            140
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "dining table",
+          "bbox": [
+            354,
+            429,
+            66,
+            71
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "bus",
+        "b": "dining table",
+        "type": "typical",
+        "relation": "on"
+      }
+    },
+    {
+      "file_name": "bus_dining table_typical_000001.jpg",
+      "height": 427,
+      "width": 640,
+      "image_path": "bus_dining table_typical_000001.jpg",
+      "mask_paths": {
+        "A": "masks/bus_dining table_typical_000001_A.png",
+        "B": "masks/bus_dining table_typical_000001_B.png"
+      },
+      "objects": [
+        {
+          "category": "bus",
+          "bbox": [
+            379,
+            69,
+            79,
+            113
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "dining table",
+          "bbox": [
+            383,
+            180,
+            131,
+            141
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "bus",
+        "b": "dining table",
+        "type": "typical",
+        "relation": "on"
+      }
+    }
+  ]
+}

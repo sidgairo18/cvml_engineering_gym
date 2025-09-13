@@ -1,0 +1,43 @@
+{
+  "images_dir": "images",
+  "samples": [
+    {
+      "file_name": "tv_mouse_atypical_000000.jpg",
+      "height": 375,
+      "width": 500,
+      "image_path": "tv_mouse_atypical_000000.jpg",
+      "mask_paths": {
+        "A": "masks/tv_mouse_atypical_000000_A.png",
+        "B": "masks/tv_mouse_atypical_000000_B.png"
+      },
+      "objects": [
+        {
+          "category": "tv",
+          "bbox": [
+            118,
+            77,
+            61,
+            172
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "mouse",
+          "bbox": [
+            193,
+            79,
+            262,
+            188
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "tv",
+        "b": "mouse",
+        "type": "atypical",
+        "relation": "next to"
+      }
+    }
+  ]
+}

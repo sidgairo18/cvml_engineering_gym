@@ -1,0 +1,21 @@
+# Main experiment configuration
+defaults:
+  - model: resnet        # choose 'resnet' or override with model=vit
+  - data: cifar10        # choose 'cifar10' or data=imagenet
+
+trainer:
+  epochs: 3
+  batch_size: 32
+  lr: ${model.lr}        # interpolation: reuse model.lr
+
+seed: 1337
+
+# Hydra's output directories (per-run working dir)
+hydra:
+  job:
+    chdir: true
+  run:
+    dir: ${hydra:runtime.cwd}/outputs/${now:%Y-%m-%d}/${now:%H-%M-%S}
+  sweep:
+    dir: ${hydra:runtime.cwd}/multiruns/${now:%Y-%m-%d}/${now:%H-%M-%S}
+    subdir: ${hydra.job.num}

@@ -1,0 +1,81 @@
+{
+  "images_dir": "images",
+  "samples": [
+    {
+      "file_name": "car_couch_typical_000000.jpg",
+      "height": 427,
+      "width": 640,
+      "image_path": "car_couch_typical_000000.jpg",
+      "mask_paths": {
+        "A": "masks/car_couch_typical_000000_A.png",
+        "B": "masks/car_couch_typical_000000_B.png"
+      },
+      "objects": [
+        {
+          "category": "car",
+          "bbox": [
+            99,
+            124,
+            218,
+            190
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "couch",
+          "bbox": [
+            97,
+            304,
+            133,
+            123
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "car",
+        "b": "couch",
+        "type": "typical",
+        "relation": "on"
+      }
+    },
+    {
+      "file_name": "car_couch_typical_000001.jpg",
+      "height": 640,
+      "width": 428,
+      "image_path": "car_couch_typical_000001.jpg",
+      "mask_paths": {
+        "A": "masks/car_couch_typical_000001_A.png",
+        "B": "masks/car_couch_typical_000001_B.png"
+      },
+      "objects": [
+        {
+          "category": "car",
+          "bbox": [
+            37,
+            462,
+            290,
+            166
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "couch",
+          "bbox": [
+            29,
+            479,
+            174,
+            161
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "car",
+        "b": "couch",
+        "type": "typical",
+        "relation": "on"
+      }
+    }
+  ]
+}

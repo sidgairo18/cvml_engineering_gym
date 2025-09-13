@@ -1,0 +1,43 @@
+{
+  "images_dir": "images",
+  "samples": [
+    {
+      "file_name": "baseball bat_baseball glove_typical_000001.jpg",
+      "height": 427,
+      "width": 640,
+      "image_path": "baseball bat_baseball glove_typical_000001.jpg",
+      "mask_paths": {
+        "A": "masks/baseball bat_baseball glove_typical_000001_A.png",
+        "B": "masks/baseball bat_baseball glove_typical_000001_B.png"
+      },
+      "objects": [
+        {
+          "category": "baseball bat",
+          "bbox": [
+            35,
+            58,
+            8,
+            66
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "baseball glove",
+          "bbox": [
+            52,
+            65,
+            217,
+            146
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "baseball bat",
+        "b": "baseball glove",
+        "type": "typical",
+        "relation": "next to"
+      }
+    }
+  ]
+}

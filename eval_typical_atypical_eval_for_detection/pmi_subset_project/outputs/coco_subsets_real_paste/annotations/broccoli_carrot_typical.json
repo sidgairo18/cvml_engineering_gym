@@ -1,0 +1,81 @@
+{
+  "images_dir": "images",
+  "samples": [
+    {
+      "file_name": "broccoli_carrot_typical_000000.jpg",
+      "height": 640,
+      "width": 424,
+      "image_path": "broccoli_carrot_typical_000000.jpg",
+      "mask_paths": {
+        "A": "masks/broccoli_carrot_typical_000000_A.png",
+        "B": "masks/broccoli_carrot_typical_000000_B.png"
+      },
+      "objects": [
+        {
+          "category": "broccoli",
+          "bbox": [
+            287,
+            242,
+            101,
+            73
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "carrot",
+          "bbox": [
+            273,
+            235,
+            151,
+            176
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "broccoli",
+        "b": "carrot",
+        "type": "typical",
+        "relation": "next to"
+      }
+    },
+    {
+      "file_name": "broccoli_carrot_typical_000001.jpg",
+      "height": 472,
+      "width": 640,
+      "image_path": "broccoli_carrot_typical_000001.jpg",
+      "mask_paths": {
+        "A": "masks/broccoli_carrot_typical_000001_A.png",
+        "B": "masks/broccoli_carrot_typical_000001_B.png"
+      },
+      "objects": [
+        {
+          "category": "broccoli",
+          "bbox": [
+            58,
+            249,
+            259,
+            187
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "carrot",
+          "bbox": [
+            325,
+            251,
+            91,
+            67
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "broccoli",
+        "b": "carrot",
+        "type": "typical",
+        "relation": "next to"
+      }
+    }
+  ]
+}

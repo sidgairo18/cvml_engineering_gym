@@ -1,0 +1,81 @@
+{
+  "images_dir": "images",
+  "samples": [
+    {
+      "file_name": "skateboard_cup_atypical_000000.jpg",
+      "height": 640,
+      "width": 424,
+      "image_path": "skateboard_cup_atypical_000000.jpg",
+      "mask_paths": {
+        "A": "masks/skateboard_cup_atypical_000000_A.png",
+        "B": "masks/skateboard_cup_atypical_000000_B.png"
+      },
+      "objects": [
+        {
+          "category": "skateboard",
+          "bbox": [
+            125,
+            351,
+            112,
+            112
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "cup",
+          "bbox": [
+            127,
+            475,
+            245,
+            156
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "skateboard",
+        "b": "cup",
+        "type": "atypical",
+        "relation": "on"
+      }
+    },
+    {
+      "file_name": "skateboard_cup_atypical_000001.jpg",
+      "height": 480,
+      "width": 640,
+      "image_path": "skateboard_cup_atypical_000001.jpg",
+      "mask_paths": {
+        "A": "masks/skateboard_cup_atypical_000001_A.png",
+        "B": "masks/skateboard_cup_atypical_000001_B.png"
+      },
+      "objects": [
+        {
+          "category": "skateboard",
+          "bbox": [
+            417,
+            121,
+            172,
+            172
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "cup",
+          "bbox": [
+            408,
+            295,
+            151,
+            130
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "skateboard",
+        "b": "cup",
+        "type": "atypical",
+        "relation": "on"
+      }
+    }
+  ]
+}

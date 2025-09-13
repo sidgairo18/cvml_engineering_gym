@@ -1,0 +1,43 @@
+{
+  "images_dir": "images",
+  "samples": [
+    {
+      "file_name": "microwave_oven_atypical_000000.jpg",
+      "height": 375,
+      "width": 500,
+      "image_path": "microwave_oven_atypical_000000.jpg",
+      "mask_paths": {
+        "A": "masks/microwave_oven_atypical_000000_A.png",
+        "B": "masks/microwave_oven_atypical_000000_B.png"
+      },
+      "objects": [
+        {
+          "category": "microwave",
+          "bbox": [
+            182,
+            69,
+            174,
+            148
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "oven",
+          "bbox": [
+            312,
+            61,
+            188,
+            154
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "microwave",
+        "b": "oven",
+        "type": "atypical",
+        "relation": "next to"
+      }
+    }
+  ]
+}

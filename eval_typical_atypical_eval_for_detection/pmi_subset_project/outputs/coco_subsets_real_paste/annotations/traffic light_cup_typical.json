@@ -1,0 +1,81 @@
+{
+  "images_dir": "images",
+  "samples": [
+    {
+      "file_name": "traffic light_cup_typical_000000.jpg",
+      "height": 480,
+      "width": 640,
+      "image_path": "traffic light_cup_typical_000000.jpg",
+      "mask_paths": {
+        "A": "masks/traffic light_cup_typical_000000_A.png",
+        "B": "masks/traffic light_cup_typical_000000_B.png"
+      },
+      "objects": [
+        {
+          "category": "traffic light",
+          "bbox": [
+            181,
+            72,
+            160,
+            160
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "cup",
+          "bbox": [
+            183,
+            245,
+            190,
+            121
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "traffic light",
+        "b": "cup",
+        "type": "typical",
+        "relation": "on"
+      }
+    },
+    {
+      "file_name": "traffic light_cup_typical_000001.jpg",
+      "height": 427,
+      "width": 640,
+      "image_path": "traffic light_cup_typical_000001.jpg",
+      "mask_paths": {
+        "A": "masks/traffic light_cup_typical_000001_A.png",
+        "B": "masks/traffic light_cup_typical_000001_B.png"
+      },
+      "objects": [
+        {
+          "category": "traffic light",
+          "bbox": [
+            21,
+            142,
+            81,
+            81
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "cup",
+          "bbox": [
+            30,
+            230,
+            295,
+            164
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "traffic light",
+        "b": "cup",
+        "type": "typical",
+        "relation": "on"
+      }
+    }
+  ]
+}

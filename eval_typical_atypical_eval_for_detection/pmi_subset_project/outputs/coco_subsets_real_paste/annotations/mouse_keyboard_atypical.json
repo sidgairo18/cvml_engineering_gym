@@ -1,0 +1,81 @@
+{
+  "images_dir": "images",
+  "samples": [
+    {
+      "file_name": "mouse_keyboard_atypical_000000.jpg",
+      "height": 457,
+      "width": 640,
+      "image_path": "mouse_keyboard_atypical_000000.jpg",
+      "mask_paths": {
+        "A": "masks/mouse_keyboard_atypical_000000_A.png",
+        "B": "masks/mouse_keyboard_atypical_000000_B.png"
+      },
+      "objects": [
+        {
+          "category": "mouse",
+          "bbox": [
+            73,
+            256,
+            229,
+            122
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "keyboard",
+          "bbox": [
+            319,
+            256,
+            91,
+            95
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "mouse",
+        "b": "keyboard",
+        "type": "atypical",
+        "relation": "next to"
+      }
+    },
+    {
+      "file_name": "mouse_keyboard_atypical_000001.jpg",
+      "height": 480,
+      "width": 640,
+      "image_path": "mouse_keyboard_atypical_000001.jpg",
+      "mask_paths": {
+        "A": "masks/mouse_keyboard_atypical_000001_A.png",
+        "B": "masks/mouse_keyboard_atypical_000001_B.png"
+      },
+      "objects": [
+        {
+          "category": "mouse",
+          "bbox": [
+            437,
+            189,
+            131,
+            94
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "keyboard",
+          "bbox": [
+            468,
+            190,
+            172,
+            100
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "mouse",
+        "b": "keyboard",
+        "type": "atypical",
+        "relation": "next to"
+      }
+    }
+  ]
+}

@@ -1,0 +1,81 @@
+{
+  "images_dir": "images",
+  "samples": [
+    {
+      "file_name": "toaster_sink_atypical_000000.jpg",
+      "height": 426,
+      "width": 640,
+      "image_path": "toaster_sink_atypical_000000.jpg",
+      "mask_paths": {
+        "A": "masks/toaster_sink_atypical_000000_A.png",
+        "B": "masks/toaster_sink_atypical_000000_B.png"
+      },
+      "objects": [
+        {
+          "category": "toaster",
+          "bbox": [
+            453,
+            228,
+            123,
+            104
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "sink",
+          "bbox": [
+            550,
+            233,
+            90,
+            122
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "toaster",
+        "b": "sink",
+        "type": "atypical",
+        "relation": "next to"
+      }
+    },
+    {
+      "file_name": "toaster_sink_atypical_000001.jpg",
+      "height": 640,
+      "width": 427,
+      "image_path": "toaster_sink_atypical_000001.jpg",
+      "mask_paths": {
+        "A": "masks/toaster_sink_atypical_000001_A.png",
+        "B": "masks/toaster_sink_atypical_000001_B.png"
+      },
+      "objects": [
+        {
+          "category": "toaster",
+          "bbox": [
+            57,
+            354,
+            83,
+            70
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "sink",
+          "bbox": [
+            154,
+            346,
+            61,
+            83
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "toaster",
+        "b": "sink",
+        "type": "atypical",
+        "relation": "next to"
+      }
+    }
+  ]
+}

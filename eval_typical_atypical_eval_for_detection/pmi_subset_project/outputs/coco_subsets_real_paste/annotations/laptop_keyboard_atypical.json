@@ -1,0 +1,81 @@
+{
+  "images_dir": "images",
+  "samples": [
+    {
+      "file_name": "laptop_keyboard_atypical_000000.jpg",
+      "height": 411,
+      "width": 640,
+      "image_path": "laptop_keyboard_atypical_000000.jpg",
+      "mask_paths": {
+        "A": "masks/laptop_keyboard_atypical_000000_A.png",
+        "B": "masks/laptop_keyboard_atypical_000000_B.png"
+      },
+      "objects": [
+        {
+          "category": "laptop",
+          "bbox": [
+            204,
+            291,
+            121,
+            92
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "keyboard",
+          "bbox": [
+            335,
+            292,
+            162,
+            94
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "laptop",
+        "b": "keyboard",
+        "type": "atypical",
+        "relation": "next to"
+      }
+    },
+    {
+      "file_name": "laptop_keyboard_atypical_000001.jpg",
+      "height": 640,
+      "width": 427,
+      "image_path": "laptop_keyboard_atypical_000001.jpg",
+      "mask_paths": {
+        "A": "masks/laptop_keyboard_atypical_000001_A.png",
+        "B": "masks/laptop_keyboard_atypical_000001_B.png"
+      },
+      "objects": [
+        {
+          "category": "laptop",
+          "bbox": [
+            112,
+            383,
+            147,
+            112
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "keyboard",
+          "bbox": [
+            273,
+            379,
+            70,
+            73
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "laptop",
+        "b": "keyboard",
+        "type": "atypical",
+        "relation": "next to"
+      }
+    }
+  ]
+}

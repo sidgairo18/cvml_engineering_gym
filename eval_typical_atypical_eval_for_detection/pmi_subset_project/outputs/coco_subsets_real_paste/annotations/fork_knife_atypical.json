@@ -1,0 +1,43 @@
+{
+  "images_dir": "images",
+  "samples": [
+    {
+      "file_name": "fork_knife_atypical_000000.jpg",
+      "height": 476,
+      "width": 640,
+      "image_path": "fork_knife_atypical_000000.jpg",
+      "mask_paths": {
+        "A": "masks/fork_knife_atypical_000000_A.png",
+        "B": "masks/fork_knife_atypical_000000_B.png"
+      },
+      "objects": [
+        {
+          "category": "fork",
+          "bbox": [
+            163,
+            163,
+            67,
+            153
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "knife",
+          "bbox": [
+            103,
+            166,
+            537,
+            103
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "fork",
+        "b": "knife",
+        "type": "atypical",
+        "relation": "next to"
+      }
+    }
+  ]
+}

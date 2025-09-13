@@ -1,0 +1,43 @@
+{
+  "images_dir": "images",
+  "samples": [
+    {
+      "file_name": "laptop_mouse_typical_000000.jpg",
+      "height": 375,
+      "width": 500,
+      "image_path": "laptop_mouse_typical_000000.jpg",
+      "mask_paths": {
+        "A": "masks/laptop_mouse_typical_000000_A.png",
+        "B": "masks/laptop_mouse_typical_000000_B.png"
+      },
+      "objects": [
+        {
+          "category": "laptop",
+          "bbox": [
+            253,
+            115,
+            241,
+            183
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "mouse",
+          "bbox": [
+            327,
+            117,
+            173,
+            106
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "laptop",
+        "b": "mouse",
+        "type": "typical",
+        "relation": "next to"
+      }
+    }
+  ]
+}

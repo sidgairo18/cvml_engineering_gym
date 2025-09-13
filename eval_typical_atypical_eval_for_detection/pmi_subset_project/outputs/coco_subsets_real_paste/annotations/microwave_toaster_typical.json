@@ -1,0 +1,81 @@
+{
+  "images_dir": "images",
+  "samples": [
+    {
+      "file_name": "microwave_toaster_typical_000000.jpg",
+      "height": 375,
+      "width": 500,
+      "image_path": "microwave_toaster_typical_000000.jpg",
+      "mask_paths": {
+        "A": "masks/microwave_toaster_typical_000000_A.png",
+        "B": "masks/microwave_toaster_typical_000000_B.png"
+      },
+      "objects": [
+        {
+          "category": "microwave",
+          "bbox": [
+            197,
+            21,
+            134,
+            114
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "toaster",
+          "bbox": [
+            341,
+            23,
+            121,
+            101
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "microwave",
+        "b": "toaster",
+        "type": "typical",
+        "relation": "next to"
+      }
+    },
+    {
+      "file_name": "microwave_toaster_typical_000001.jpg",
+      "height": 381,
+      "width": 640,
+      "image_path": "microwave_toaster_typical_000001.jpg",
+      "mask_paths": {
+        "A": "masks/microwave_toaster_typical_000001_A.png",
+        "B": "masks/microwave_toaster_typical_000001_B.png"
+      },
+      "objects": [
+        {
+          "category": "microwave",
+          "bbox": [
+            44,
+            132,
+            77,
+            66
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "toaster",
+          "bbox": [
+            138,
+            126,
+            90,
+            76
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "microwave",
+        "b": "toaster",
+        "type": "typical",
+        "relation": "next to"
+      }
+    }
+  ]
+}

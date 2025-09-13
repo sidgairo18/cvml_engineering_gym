@@ -1,0 +1,43 @@
+{
+  "images_dir": "images",
+  "samples": [
+    {
+      "file_name": "horse_cup_atypical_000000.jpg",
+      "height": 612,
+      "width": 612,
+      "image_path": "horse_cup_atypical_000000.jpg",
+      "mask_paths": {
+        "A": "masks/horse_cup_atypical_000000_A.png",
+        "B": "masks/horse_cup_atypical_000000_B.png"
+      },
+      "objects": [
+        {
+          "category": "horse",
+          "bbox": [
+            360,
+            306,
+            66,
+            77
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "cup",
+          "bbox": [
+            367,
+            378,
+            151,
+            84
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "horse",
+        "b": "cup",
+        "type": "atypical",
+        "relation": "on"
+      }
+    }
+  ]
+}

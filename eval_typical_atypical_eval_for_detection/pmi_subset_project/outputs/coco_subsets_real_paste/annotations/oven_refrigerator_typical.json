@@ -1,0 +1,81 @@
+{
+  "images_dir": "images",
+  "samples": [
+    {
+      "file_name": "oven_refrigerator_typical_000000.jpg",
+      "height": 426,
+      "width": 640,
+      "image_path": "oven_refrigerator_typical_000000.jpg",
+      "mask_paths": {
+        "A": "masks/oven_refrigerator_typical_000000_A.png",
+        "B": "masks/oven_refrigerator_typical_000000_B.png"
+      },
+      "objects": [
+        {
+          "category": "oven",
+          "bbox": [
+            390,
+            156,
+            227,
+            186
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "refrigerator",
+          "bbox": [
+            597,
+            161,
+            43,
+            143
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "oven",
+        "b": "refrigerator",
+        "type": "typical",
+        "relation": "next to"
+      }
+    },
+    {
+      "file_name": "oven_refrigerator_typical_000001.jpg",
+      "height": 640,
+      "width": 426,
+      "image_path": "oven_refrigerator_typical_000001.jpg",
+      "mask_paths": {
+        "A": "masks/oven_refrigerator_typical_000001_A.png",
+        "B": "masks/oven_refrigerator_typical_000001_B.png"
+      },
+      "objects": [
+        {
+          "category": "oven",
+          "bbox": [
+            201,
+            428,
+            225,
+            184
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "refrigerator",
+          "bbox": [
+            386,
+            432,
+            40,
+            131
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "oven",
+        "b": "refrigerator",
+        "type": "typical",
+        "relation": "next to"
+      }
+    }
+  ]
+}

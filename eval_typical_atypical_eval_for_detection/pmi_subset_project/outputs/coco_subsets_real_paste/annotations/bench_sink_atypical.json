@@ -1,0 +1,81 @@
+{
+  "images_dir": "images",
+  "samples": [
+    {
+      "file_name": "bench_sink_atypical_000000.jpg",
+      "height": 480,
+      "width": 640,
+      "image_path": "bench_sink_atypical_000000.jpg",
+      "mask_paths": {
+        "A": "masks/bench_sink_atypical_000000_A.png",
+        "B": "masks/bench_sink_atypical_000000_B.png"
+      },
+      "objects": [
+        {
+          "category": "bench",
+          "bbox": [
+            209,
+            133,
+            90,
+            162
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "sink",
+          "bbox": [
+            217,
+            304,
+            91,
+            123
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "bench",
+        "b": "sink",
+        "type": "atypical",
+        "relation": "on"
+      }
+    },
+    {
+      "file_name": "bench_sink_atypical_000001.jpg",
+      "height": 428,
+      "width": 640,
+      "image_path": "bench_sink_atypical_000001.jpg",
+      "mask_paths": {
+        "A": "masks/bench_sink_atypical_000001_A.png",
+        "B": "masks/bench_sink_atypical_000001_B.png"
+      },
+      "objects": [
+        {
+          "category": "bench",
+          "bbox": [
+            376,
+            297,
+            43,
+            79
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "sink",
+          "bbox": [
+            369,
+            307,
+            89,
+            121
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "bench",
+        "b": "sink",
+        "type": "atypical",
+        "relation": "on"
+      }
+    }
+  ]
+}

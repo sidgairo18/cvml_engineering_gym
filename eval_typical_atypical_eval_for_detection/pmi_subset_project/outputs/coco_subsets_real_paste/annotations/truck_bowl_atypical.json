@@ -1,0 +1,81 @@
+{
+  "images_dir": "images",
+  "samples": [
+    {
+      "file_name": "truck_bowl_atypical_000000.jpg",
+      "height": 479,
+      "width": 640,
+      "image_path": "truck_bowl_atypical_000000.jpg",
+      "mask_paths": {
+        "A": "masks/truck_bowl_atypical_000000_A.png",
+        "B": "masks/truck_bowl_atypical_000000_B.png"
+      },
+      "objects": [
+        {
+          "category": "truck",
+          "bbox": [
+            285,
+            4,
+            249,
+            149
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "bowl",
+          "bbox": [
+            281,
+            156,
+            280,
+            167
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "truck",
+        "b": "bowl",
+        "type": "atypical",
+        "relation": "on"
+      }
+    },
+    {
+      "file_name": "truck_bowl_atypical_000001.jpg",
+      "height": 480,
+      "width": 640,
+      "image_path": "truck_bowl_atypical_000001.jpg",
+      "mask_paths": {
+        "A": "masks/truck_bowl_atypical_000001_A.png",
+        "B": "masks/truck_bowl_atypical_000001_B.png"
+      },
+      "objects": [
+        {
+          "category": "truck",
+          "bbox": [
+            427,
+            9,
+            210,
+            126
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "bowl",
+          "bbox": [
+            418,
+            143,
+            182,
+            109
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "truck",
+        "b": "bowl",
+        "type": "atypical",
+        "relation": "on"
+      }
+    }
+  ]
+}

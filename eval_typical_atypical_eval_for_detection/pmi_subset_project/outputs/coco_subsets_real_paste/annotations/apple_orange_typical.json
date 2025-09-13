@@ -1,0 +1,81 @@
+{
+  "images_dir": "images",
+  "samples": [
+    {
+      "file_name": "apple_orange_typical_000000.jpg",
+      "height": 427,
+      "width": 640,
+      "image_path": "apple_orange_typical_000000.jpg",
+      "mask_paths": {
+        "A": "masks/apple_orange_typical_000000_A.png",
+        "B": "masks/apple_orange_typical_000000_B.png"
+      },
+      "objects": [
+        {
+          "category": "apple",
+          "bbox": [
+            12,
+            219,
+            156,
+            156
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "orange",
+          "bbox": [
+            185,
+            221,
+            57,
+            90
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "apple",
+        "b": "orange",
+        "type": "typical",
+        "relation": "next to"
+      }
+    },
+    {
+      "file_name": "apple_orange_typical_000001.jpg",
+      "height": 480,
+      "width": 640,
+      "image_path": "apple_orange_typical_000001.jpg",
+      "mask_paths": {
+        "A": "masks/apple_orange_typical_000001_A.png",
+        "B": "masks/apple_orange_typical_000001_B.png"
+      },
+      "objects": [
+        {
+          "category": "apple",
+          "bbox": [
+            16,
+            57,
+            121,
+            121
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "orange",
+          "bbox": [
+            146,
+            50,
+            155,
+            141
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "apple",
+        "b": "orange",
+        "type": "typical",
+        "relation": "next to"
+      }
+    }
+  ]
+}

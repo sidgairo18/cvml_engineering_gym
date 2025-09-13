@@ -1,0 +1,14 @@
+model:
+  name: resnet50
+  lr: 0.001
+  width: 64
+data:
+  name: cifar10
+  root: ./data/cifar10
+  num_classes: 10
+  image_size: 32
+trainer:
+  epochs: 3
+  batch_size: 32
+  lr: ${model.lr}
+seed: 1337

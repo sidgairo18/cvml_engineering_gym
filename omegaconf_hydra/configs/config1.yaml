@@ -1,0 +1,10 @@
+# config.yaml
+model:
+  name: resnet50
+  lr: 0.001
+trainer:
+  epochs: 10
+  batch_size: 32
+data_dir: /mnt/data
+train_dir: ${data_dir}/train
+val_dir: ${data_dir}/val

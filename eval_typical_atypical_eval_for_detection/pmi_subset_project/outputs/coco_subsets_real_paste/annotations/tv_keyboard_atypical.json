@@ -1,0 +1,81 @@
+{
+  "images_dir": "images",
+  "samples": [
+    {
+      "file_name": "tv_keyboard_atypical_000000.jpg",
+      "height": 422,
+      "width": 640,
+      "image_path": "tv_keyboard_atypical_000000.jpg",
+      "mask_paths": {
+        "A": "masks/tv_keyboard_atypical_000000_A.png",
+        "B": "masks/tv_keyboard_atypical_000000_B.png"
+      },
+      "objects": [
+        {
+          "category": "tv",
+          "bbox": [
+            68,
+            71,
+            26,
+            73
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "keyboard",
+          "bbox": [
+            108,
+            73,
+            194,
+            113
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "tv",
+        "b": "keyboard",
+        "type": "atypical",
+        "relation": "next to"
+      }
+    },
+    {
+      "file_name": "tv_keyboard_atypical_000001.jpg",
+      "height": 480,
+      "width": 640,
+      "image_path": "tv_keyboard_atypical_000001.jpg",
+      "mask_paths": {
+        "A": "masks/tv_keyboard_atypical_000001_A.png",
+        "B": "masks/tv_keyboard_atypical_000001_B.png"
+      },
+      "objects": [
+        {
+          "category": "tv",
+          "bbox": [
+            201,
+            204,
+            27,
+            78
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "keyboard",
+          "bbox": [
+            236,
+            207,
+            152,
+            158
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "tv",
+        "b": "keyboard",
+        "type": "atypical",
+        "relation": "next to"
+      }
+    }
+  ]
+}

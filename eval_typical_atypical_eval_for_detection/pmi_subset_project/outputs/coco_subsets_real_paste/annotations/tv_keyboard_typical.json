@@ -1,0 +1,81 @@
+{
+  "images_dir": "images",
+  "samples": [
+    {
+      "file_name": "tv_keyboard_typical_000000.jpg",
+      "height": 366,
+      "width": 640,
+      "image_path": "tv_keyboard_typical_000000.jpg",
+      "mask_paths": {
+        "A": "masks/tv_keyboard_typical_000000_A.png",
+        "B": "masks/tv_keyboard_typical_000000_B.png"
+      },
+      "objects": [
+        {
+          "category": "tv",
+          "bbox": [
+            461,
+            85,
+            16,
+            105
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "keyboard",
+          "bbox": [
+            490,
+            85,
+            142,
+            148
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "tv",
+        "b": "keyboard",
+        "type": "typical",
+        "relation": "next to"
+      }
+    },
+    {
+      "file_name": "tv_keyboard_typical_000001.jpg",
+      "height": 480,
+      "width": 640,
+      "image_path": "tv_keyboard_typical_000001.jpg",
+      "mask_paths": {
+        "A": "masks/tv_keyboard_typical_000001_A.png",
+        "B": "masks/tv_keyboard_typical_000001_B.png"
+      },
+      "objects": [
+        {
+          "category": "tv",
+          "bbox": [
+            435,
+            36,
+            27,
+            113
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "keyboard",
+          "bbox": [
+            477,
+            40,
+            63,
+            66
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "tv",
+        "b": "keyboard",
+        "type": "typical",
+        "relation": "next to"
+      }
+    }
+  ]
+}

@@ -1,0 +1,81 @@
+{
+  "images_dir": "images",
+  "samples": [
+    {
+      "file_name": "tennis racket_cup_typical_000000.jpg",
+      "height": 360,
+      "width": 640,
+      "image_path": "tennis racket_cup_typical_000000.jpg",
+      "mask_paths": {
+        "A": "masks/tennis racket_cup_typical_000000_A.png",
+        "B": "masks/tennis racket_cup_typical_000000_B.png"
+      },
+      "objects": [
+        {
+          "category": "tennis racket",
+          "bbox": [
+            498,
+            153,
+            126,
+            134
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "cup",
+          "bbox": [
+            489,
+            292,
+            87,
+            68
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "tennis racket",
+        "b": "cup",
+        "type": "typical",
+        "relation": "on"
+      }
+    },
+    {
+      "file_name": "tennis racket_cup_typical_000001.jpg",
+      "height": 625,
+      "width": 640,
+      "image_path": "tennis racket_cup_typical_000001.jpg",
+      "mask_paths": {
+        "A": "masks/tennis racket_cup_typical_000001_A.png",
+        "B": "masks/tennis racket_cup_typical_000001_B.png"
+      },
+      "objects": [
+        {
+          "category": "tennis racket",
+          "bbox": [
+            147,
+            203,
+            107,
+            113
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "cup",
+          "bbox": [
+            149,
+            314,
+            340,
+            189
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "tennis racket",
+        "b": "cup",
+        "type": "typical",
+        "relation": "on"
+      }
+    }
+  ]
+}

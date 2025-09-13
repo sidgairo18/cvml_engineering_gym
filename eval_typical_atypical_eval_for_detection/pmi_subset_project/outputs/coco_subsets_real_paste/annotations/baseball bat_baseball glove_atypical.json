@@ -1,0 +1,81 @@
+{
+  "images_dir": "images",
+  "samples": [
+    {
+      "file_name": "baseball bat_baseball glove_atypical_000000.jpg",
+      "height": 425,
+      "width": 640,
+      "image_path": "baseball bat_baseball glove_atypical_000000.jpg",
+      "mask_paths": {
+        "A": "masks/baseball bat_baseball glove_atypical_000000_A.png",
+        "B": "masks/baseball bat_baseball glove_atypical_000000_B.png"
+      },
+      "objects": [
+        {
+          "category": "baseball bat",
+          "bbox": [
+            413,
+            28,
+            17,
+            139
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "baseball glove",
+          "bbox": [
+            449,
+            29,
+            153,
+            103
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "baseball bat",
+        "b": "baseball glove",
+        "type": "atypical",
+        "relation": "next to"
+      }
+    },
+    {
+      "file_name": "baseball bat_baseball glove_atypical_000001.jpg",
+      "height": 480,
+      "width": 640,
+      "image_path": "baseball bat_baseball glove_atypical_000001.jpg",
+      "mask_paths": {
+        "A": "masks/baseball bat_baseball glove_atypical_000001_A.png",
+        "B": "masks/baseball bat_baseball glove_atypical_000001_B.png"
+      },
+      "objects": [
+        {
+          "category": "baseball bat",
+          "bbox": [
+            494,
+            258,
+            14,
+            111
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "baseball glove",
+          "bbox": [
+            454,
+            254,
+            186,
+            125
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "baseball bat",
+        "b": "baseball glove",
+        "type": "atypical",
+        "relation": "next to"
+      }
+    }
+  ]
+}

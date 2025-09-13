@@ -1,0 +1,81 @@
+{
+  "images_dir": "images",
+  "samples": [
+    {
+      "file_name": "banana_orange_atypical_000000.jpg",
+      "height": 640,
+      "width": 431,
+      "image_path": "banana_orange_atypical_000000.jpg",
+      "mask_paths": {
+        "A": "masks/banana_orange_atypical_000000_A.png",
+        "B": "masks/banana_orange_atypical_000000_B.png"
+      },
+      "objects": [
+        {
+          "category": "banana",
+          "bbox": [
+            212,
+            13,
+            182,
+            139
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "orange",
+          "bbox": [
+            280,
+            5,
+            151,
+            124
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "banana",
+        "b": "orange",
+        "type": "atypical",
+        "relation": "next to"
+      }
+    },
+    {
+      "file_name": "banana_orange_atypical_000001.jpg",
+      "height": 375,
+      "width": 500,
+      "image_path": "banana_orange_atypical_000001.jpg",
+      "mask_paths": {
+        "A": "masks/banana_orange_atypical_000001_A.png",
+        "B": "masks/banana_orange_atypical_000001_B.png"
+      },
+      "objects": [
+        {
+          "category": "banana",
+          "bbox": [
+            184,
+            4,
+            146,
+            156
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "orange",
+          "bbox": [
+            346,
+            11,
+            125,
+            145
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "banana",
+        "b": "orange",
+        "type": "atypical",
+        "relation": "next to"
+      }
+    }
+  ]
+}

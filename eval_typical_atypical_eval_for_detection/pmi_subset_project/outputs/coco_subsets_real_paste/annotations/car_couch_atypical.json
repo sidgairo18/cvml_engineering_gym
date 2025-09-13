@@ -1,0 +1,81 @@
+{
+  "images_dir": "images",
+  "samples": [
+    {
+      "file_name": "car_couch_atypical_000000.jpg",
+      "height": 455,
+      "width": 640,
+      "image_path": "car_couch_atypical_000000.jpg",
+      "mask_paths": {
+        "A": "masks/car_couch_atypical_000000_A.png",
+        "B": "masks/car_couch_atypical_000000_B.png"
+      },
+      "objects": [
+        {
+          "category": "car",
+          "bbox": [
+            288,
+            131,
+            80,
+            146
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "couch",
+          "bbox": [
+            294,
+            277,
+            179,
+            166
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "car",
+        "b": "couch",
+        "type": "atypical",
+        "relation": "on"
+      }
+    },
+    {
+      "file_name": "car_couch_atypical_000001.jpg",
+      "height": 424,
+      "width": 640,
+      "image_path": "car_couch_atypical_000001.jpg",
+      "mask_paths": {
+        "A": "masks/car_couch_atypical_000001_A.png",
+        "B": "masks/car_couch_atypical_000001_B.png"
+      },
+      "objects": [
+        {
+          "category": "car",
+          "bbox": [
+            169,
+            105,
+            275,
+            155
+          ],
+          "iscrowd": 0
+        },
+        {
+          "category": "couch",
+          "bbox": [
+            163,
+            270,
+            118,
+            109
+          ],
+          "iscrowd": 0
+        }
+      ],
+      "pair": {
+        "a": "car",
+        "b": "couch",
+        "type": "atypical",
+        "relation": "on"
+      }
+    }
+  ]
+}
