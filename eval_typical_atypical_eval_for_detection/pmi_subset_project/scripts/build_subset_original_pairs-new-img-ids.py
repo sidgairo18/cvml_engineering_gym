@@ -124,6 +124,15 @@ def main():
     out_typ = dict(images=images_typ, annotations=anns_typ, categories=cats)
     out_aty = dict(images=images_aty, annotations=anns_aty, categories=cats)
 
+    # For LVIS, add empty fields required by the format                                       
+    if args.dataset == 'lvis':                                                                
+        for im in out_typ['images']:                                                          
+            im['not_exhaustive_category_ids'] = []                                            
+            im['neg_category_ids'] = []                                                       
+        for im in out_aty['images']:                                                          
+            im['not_exhaustive_category_ids'] = []                                            
+            im['neg_category_ids'] = []
+
     with open(os.path.join(args.out_dir, 'typical.json'), 'w') as f:
         json.dump(out_typ, f)
     with open(os.path.join(args.out_dir, 'atypical.json'), 'w') as f:

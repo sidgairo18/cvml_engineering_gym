@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
-import argparse, json, math, os
+import argparse, json, math, os, random
 from collections import defaultdict, Counter
 from tqdm import tqdm
+from typing import List, Optional, Tuple, Dict
+import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
@@ -79,6 +81,108 @@ def _plot_top_bottom(df_out, top_k, out_dir):
     plt.close()
     return plot_path
 
+def build_pmi_matrix(
+    df_out: pd.DataFrame,
+    cats_id2name: Dict[int, str],
+    max_cats: Optional[int] = None,
+    sample_seed: Optional[int] = None,   # NEW
+    pad_value: Optional[float] = np.nan,
+) -> Tuple[List[str], np.ndarray]:
+    """
+    Build a symmetric category×category PMI matrix from df_out (rows are pairs with a<b).
+    Returns names (matrix order) and PMI matrix M (C×C).
+    """
+    if df_out.empty:
+        return [], np.zeros((0, 0), dtype=float)
+
+    # Choose category set by frequency proxy from df_out
+    '''
+    freq: Dict[str, int] = {}
+    for _, r in df_out.iterrows():
+        a = r["cat_a_name"]; b = r["cat_b_name"]
+        freq[a] = max(freq.get(a, 0), int(r["count_a"]))
+        freq[b] = max(freq.get(b, 0), int(r["count_b"]))
+
+    names_all = sorted(freq.keys(), key=lambda k: (-freq[k], k))
+    names = names_all[:max_cats] if (max_cats is not None and max_cats > 0) else names_all
+    '''
+    # Build the candidate pool from categories present in df_out and their frequencies
+    freq: Dict[str, int] = {}
+    for _, r in df_out.iterrows():
+        a = r["cat_a_name"]; b = r["cat_b_name"]
+        freq[a] = max(freq.get(a, 0), int(r["count_a"]))
+        freq[b] = max(freq.get(b, 0), int(r["count_b"]))
+
+    names_pool = list(freq.keys())
+
+    # If max_cats is set, randomly pick that many first (without replacement)
+    if max_cats is not None and max_cats > 0 and len(names_pool) > max_cats:
+        rng = random.Random(sample_seed)  # deterministic if seed provided
+        names_pool = rng.sample(names_pool, k=max_cats)
+
+    # Now sort the sampled names by frequency (desc) then name for stability
+    names = sorted(names_pool, key=lambda n: (-freq[n], n))
+
+    idx = {n: i for i, n in enumerate(names)}
+    C = len(names)
+    fill = pad_value if pad_value is not None else np.nan
+    M = np.full((C, C), fill, dtype=float)
+
+    # Fill symmetric PMI values
+    for _, r in df_out.iterrows():
+        a = r["cat_a_name"]; b = r["cat_b_name"]
+        if a not in idx or b not in idx:
+            continue
+        i, j = idx[a], idx[b]
+        pmi = float(r["pmi"])
+        # keep the larger if multiple entries would map to same cell
+        if np.isnan(M[i, j]) or pmi > M[i, j]:
+            M[i, j] = pmi
+        if np.isnan(M[j, i]) or pmi > M[j, i]:
+            M[j, i] = pmi
+
+    # Diagonal as 0.0 for readability
+    np.fill_diagonal(M, 0.0)
+    return names, M
+
+
+def save_pmi_heatmap(names: List[str], M: np.ndarray, out_path: str) -> None:
+    """
+    Save the PMI matrix as a heatmap image with symmetric color scaling around 0.
+    """
+    import matplotlib.pyplot as plt
+    import os
+
+    if M.size == 0:
+        raise SystemExit("PMI heatmap: empty matrix (no eligible categories).")
+
+    finite_vals = M[np.isfinite(M)]
+    if finite_vals.size == 0:
+        vlim = 1.0
+    else:
+        vmax = float(np.nanmax(np.abs(finite_vals)))
+        vlim = vmax if vmax > 0 else 1.0
+
+    fig_w = max(6.0, min(18.0, 0.25 * len(names)))
+    fig_h = fig_w
+    plt.figure(figsize=(fig_w, fig_h), dpi=200)
+    
+    cmap = plt.get_cmap("bwr").copy()
+    cmap.set_bad("0.85")  # light gray for NaNs
+    #im = plt.imshow(M, vmin=-vlim, vmax=vlim, aspect="equal")
+    im = plt.imshow(M, vmin=-vlim, vmax=vlim, aspect="equal", cmap=cmap)
+    plt.colorbar(im, fraction=0.046, pad=0.04, label="PMI")
+
+    plt.xticks(range(len(names)), names, rotation=90)
+    plt.yticks(range(len(names)), names)
+    plt.title("Category × Category PMI")
+    plt.tight_layout()
+
+    os.makedirs(os.path.dirname(out_path), exist_ok=True)
+    plt.savefig(out_path)
+    plt.close()
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--ann', required=True)
@@ -87,6 +191,12 @@ def main():
     ap.add_argument('--min_pair', type=int, default=20)
     ap.add_argument('--out_dir', required=True)
     ap.add_argument('--plot_topk', type=int, default=0)
+    ap.add_argument('--plot_heatmap', default=None, help="If set, save a PMI heatmap PNG to this path.")
+    ap.add_argument('--heatmap_max_cats', type=int, default=None, help="Optional cap on number of categories shown (most frequent).")
+    ap.add_argument('--heatmap_pad', default='nan', choices=['nan','zero'], help="Fill for missing pairs: 'nan' or 'zero'.")
+    ap.add_argument('--heatmap_sample_seed', type=int, default=None,
+                help="Random seed for selecting categories into the heatmap (before sorting).")
+
     args = ap.parse_args()
 
     os.makedirs(args.out_dir, exist_ok=True)
@@ -112,6 +222,18 @@ def main():
         plot_path = _plot_top_bottom(df_out, args.plot_topk, args.out_dir)
         print(f"[OK] Plot saved to {plot_path}")
     print(f"[OK] PMI saved to {pmi_csv}. Rows={len(df_out)}")
+
+    # Optional: full PMI heatmap across categories
+    if args.plot_heatmap:
+        pad_value = np.nan if args.heatmap_pad == 'nan' else 0.0
+        names, M = build_pmi_matrix(df_out, cats, max_cats=args.heatmap_max_cats, 
+                                    sample_seed=args.heatmap_sample_seed, pad_value=pad_value)
+        if len(names) == 0:
+            print("[WARN] Heatmap requested but no categories eligible; skipping.")
+        else:
+            save_pmi_heatmap(names, M, args.plot_heatmap)
+            print(f"[OK] Heatmap saved to {args.plot_heatmap} (C={len(names)})")
+
 
 if __name__ == '__main__':
     main()

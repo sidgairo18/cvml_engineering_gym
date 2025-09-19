@@ -49,10 +49,10 @@ import cv2
 import numpy as np
 
 GREEN  = (50, 220, 50)    # anchor
-BLUE   = (60, 130, 250)   # partner
-GRAY   = (170, 170, 170)  # others
-YELLOW = (0, 220, 220)    # typical tag
-MAGENTA= (220, 50, 180)   # atypical tag
+BLUE   = (60, 130, 250)    # partner
+GRAY   = (170, 170, 170)   # others
+YELLOW = (0, 220, 220)     # typical tag
+MAGENTA= (220, 50, 180)    # atypical tag
 
 def _ensure_dir(p):
     Path(p).mkdir(parents=True, exist_ok=True)
@@ -72,27 +72,13 @@ def _link_or_copy(src, dst, symlink=False):
 def _pad12(n):
     return f"{int(n):012d}"
 
-def _draw_box(img, bbox, color, label=None, outer_color=None):
-    """
-    Draw a dual-stroke rectangle:
-      - outer_color (if provided): thick outer halo (e.g., MAGENTA for atypical)
-      - color: inner stroke in category color (GREEN/BLUE/GRAY)
-    """
-    x, y, w, h = bbox
-    x, y, w, h = int(x), int(y), int(w), int(h)
-
-    # thickness scales with image size
-    T_in = max(2, int(0.004 * max(img.shape[:2])))
-    T_out = max(2, int(0.006 * max(img.shape[:2])))
-
-    if outer_color is not None:
-        cv2.rectangle(img, (x, y), (x + w, y + h), outer_color, T_out)
-
-    cv2.rectangle(img, (x, y), (x + w, y + h), color, T_in)
-
+def _draw_box(img, bbox, color, label=None):
+    x,y,w,h = bbox
+    x,y,w,h = int(x), int(y), int(w), int(h)
+    cv2.rectangle(img, (x,y), (x+w, y+h), color, 2)
     if label:
-        tt = max(1, int(0.6 + 0.002 * max(img.shape[:2])))
-        cv2.putText(img, label, (x, y - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, tt, cv2.LINE_AA)
+        tt = max(1, int(0.6 + 0.002*max(img.shape[:2])))
+        cv2.putText(img, label, (x, y-5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, tt, cv2.LINE_AA)
 
 def _bbox_from_mask(path):
     M = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
@@ -169,14 +155,14 @@ def group_original(images_root, manifests_dir, out_dir, symlink=False, limit_per
                         continue
                     img_id = orig_id  # after normalization ids == stem
                     anns_here = img_to_anns.get(img_id, [])
-
+                    # Draw boxes
                     for ann in anns_here:
                         cid = ann['category_id']
                         name = id_to_name.get(cid, str(cid))
                         box = ann.get('bbox', None)
-                        if box is None:
+                        if box is None: 
                             continue
-                        # category color
+                        # color logic
                         if name == a:
                             col = GREEN
                         elif name == b:
@@ -185,12 +171,8 @@ def group_original(images_root, manifests_dir, out_dir, symlink=False, limit_per
                             if not draw_all:
                                 continue
                             col = GRAY
-
-                        # Only highlight atypical cases on anchor/partner with MAGENTA
-                        outer = MAGENTA if typetag == 'atypical' and (name == a or name == b) else None
-                        _draw_box(I, box, col, label=name, outer_color=outer)
-
-                    # add typetag stripe at the top
+                        _draw_box(I, box, col, label=name)
+                    # add typetag stripe
                     tag_col = YELLOW if typetag=='typical' else MAGENTA
                     cv2.rectangle(I, (0,0), (I.shape[1], 4), tag_col, -1)
                     _ensure_dir(dst_dir)
@@ -200,6 +182,8 @@ def group_original(images_root, manifests_dir, out_dir, symlink=False, limit_per
                     _link_or_copy(src, dst, symlink=symlink)
 
                 if limit_per_pair is not None and (i+1) >= limit_per_pair:
+                    # limit per manifest line is a rough cap; for precise per-pair control,
+                    # pre-filter manifests or add counters keyed by (a,typetag,match_id).
                     pass
 
 def group_real_paste(rp_dir, out_dir, symlink=False, limit_per_pair=None, draw=False, draw_all=False):
@@ -245,10 +229,7 @@ def group_real_paste(rp_dir, out_dir, symlink=False, limit_per_pair=None, draw=F
                         if not draw_all:
                             continue
                         col = GRAY
-
-                    outer = MAGENTA if typ == 'atypical' and (name == a or name == b) else None
-                    _draw_box(I, box, col, label=name, outer_color=outer)
-
+                    _draw_box(I, box, col, label=name)
                 tag_col = YELLOW if typ=='typical' else MAGENTA
                 cv2.rectangle(I, (0,0), (I.shape[1], 4), tag_col, -1)
                 _ensure_dir(dst_dir)
@@ -294,20 +275,17 @@ def group_diffusion(images_root, diffusion_manifest, out_dir, symlink=False, lim
                     box = _bbox_from_mask(mpath)
                     if box is None:
                         continue
-                    if name == a:
-                        col = GREEN
-                    elif name == b:
-                        col = BLUE
+                    if name == a: col = GREEN
+                    elif name == b: col = BLUE
                     else:
                         if not draw_all:
                             continue
                         col = GRAY
-
-                    outer = MAGENTA if typ == 'atypical' and (name == a or name == b) else None
-                    _draw_box(I, box, col, label=name, outer_color=outer)
+                    _draw_box(I, box, col, label=name)
                     did_any = True
-
-                # add typetag stripe
+                if not did_any:
+                    # fallback: just tag the image
+                    pass
                 tag_col = YELLOW if typ=='typical' else MAGENTA
                 cv2.rectangle(I, (0,0), (I.shape[1], 4), tag_col, -1)
                 _ensure_dir(dst_dir)
@@ -353,4 +331,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
