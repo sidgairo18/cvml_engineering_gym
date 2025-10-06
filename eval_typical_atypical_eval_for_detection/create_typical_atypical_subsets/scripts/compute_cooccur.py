@@ -401,7 +401,57 @@ def _plot_topk_bottomk(df_or: pd.DataFrame, top_k: int, metric: str, out_dir: st
     plt.close()
     return out_path
 
+def build_nc_matrix_oriented(df_un: pd.DataFrame,
+                             cats_id2name: Dict[int, str],
+                             max_cats: Optional[int],
+                             sample_seed: Optional[int],
+                             pad_value: float) -> Tuple[List[str], np.ndarray]:
+    """
+    Oriented C×C NC matrix from the unordered df (one row per a<b).
+    M[i,j] = NC(a->b) = P(b|a)
+    M[j,i] = NC(b->a) = P(a|b)
 
+    - Rows are anchors, columns are partners.
+    - Diagonal is set to 0.0 for readability (P(a|a) is not defined here).
+    """
+    if df_un.empty:
+        return [], np.zeros((0, 0), dtype=float)
+
+    # Frequency proxy to pick categories (by max per-class count)
+    freq: Dict[str, int] = {}
+    for _, r in df_un.iterrows():
+        a = cats_id2name.get(int(r["cat_a_id"]), str(int(r["cat_a_id"])))
+        b = cats_id2name.get(int(r["cat_b_id"]), str(int(r["cat_b_id"])))
+        freq[a] = max(freq.get(a, 0), int(r["count_a"]))
+        freq[b] = max(freq.get(b, 0), int(r["count_b"]))
+
+    pool = list(freq.keys())
+    if max_cats is not None and max_cats > 0 and len(pool) > max_cats:
+        rng = random.Random(sample_seed)
+        pool = rng.sample(pool, k=max_cats)
+
+    names = sorted(pool, key=lambda n: (-freq[n], n))
+    name2idx = {n: i for i, n in enumerate(names)}
+    C = len(names)
+    M = np.full((C, C), pad_value, dtype=float)
+
+    for _, r in df_un.iterrows():
+        a_name = cats_id2name.get(int(r["cat_a_id"]), str(int(r["cat_a_id"])))
+        b_name = cats_id2name.get(int(r["cat_b_id"]), str(int(r["cat_b_id"])))
+        if a_name not in name2idx or b_name not in name2idx:
+            continue
+        i, j = name2idx[a_name], name2idx[b_name]
+        nc_ab = float(r["nc_ab"])  # P(b|a)
+        nc_ba = float(r["nc_ba"])  # P(a|b)
+
+        # Keep the larger value if multiple rows hit the same cell
+        if np.isnan(M[i, j]) or nc_ab > M[i, j]:
+            M[i, j] = nc_ab
+        if np.isnan(M[j, i]) or nc_ba > M[j, i]:
+            M[j, i] = nc_ba
+
+    np.fill_diagonal(M, 0.0)
+    return names, M
 
 def build_pmi_matrix(df_un: pd.DataFrame, cats_id2name: Dict[int, str],
                      max_cats: Optional[int], sample_seed: Optional[int],
@@ -464,6 +514,36 @@ def save_heatmap(names: List[str], M: np.ndarray, out_path: str, cmap_name="bwr"
     plt.savefig(out_path)
     plt.close()
 
+def save_heatmap_nc_oriented(names: List[str],
+                             M: np.ndarray,
+                             out_path: str,
+                             cmap_name: str = "viridis") -> None:
+    """
+    Save an oriented NC heatmap.
+    Rows = anchor (a), Cols = partner (b), Value = P(b|a) in [0,1].
+    """
+    if M.size == 0:
+        raise SystemExit("NC heatmap: empty matrix.")
+    finite_vals = M[np.isfinite(M)]
+    vmax = float(np.nanmax(finite_vals)) if finite_vals.size else 1.0
+    vmin = 0.0
+
+    fig_w = max(6.0, min(18.0, 0.25 * len(names)))
+    fig_h = fig_w
+    plt.figure(figsize=(fig_w, fig_h), dpi=200)
+    cmap = plt.get_cmap(cmap_name).copy()
+    cmap.set_bad("0.85")
+    im = plt.imshow(M, vmin=vmin, vmax=vmax, aspect="equal", cmap=cmap)
+    plt.colorbar(im, fraction=0.046, pad=0.04, label="NC (P(partner|anchor))")
+    plt.xticks(range(len(names)), names, rotation=90)
+    plt.yticks(range(len(names)), names)
+    plt.title("Oriented NC: rows=anchor, cols=partner (P(partner | anchor))")
+    plt.tight_layout()
+    os.makedirs(os.path.dirname(out_path), exist_ok=True)
+    plt.savefig(out_path)
+    plt.close()
+
+
 
 # -------------------------
 # CLI
@@ -498,10 +578,11 @@ def main():
     # Optional plots
     ap.add_argument("--plot_topk", type=int, default=0)
     ap.add_argument("--plot_metric", choices=["pmi","nc","ts"], default="ts")
-    ap.add_argument("--plot_heatmap", default=None, help="PMI heatmap PNG path (symmetric metric).")
+    ap.add_argument("--plot_heatmap", default=None, help="Heatmap PNG path (symmetric metric - PMI, or asymmetric - NC).")
     ap.add_argument("--heatmap_max_cats", type=int, default=None)
     ap.add_argument("--heatmap_pad", choices=["nan","zero"], default="nan")
     ap.add_argument("--heatmap_sample_seed", type=int, default=None)
+    ap.add_argument("--heatmap_metric", choices=["pmi","nc"], default="pmi", help="Metric for heatmap: PMI (symmetric) or NC (oriented).")
 
     args = ap.parse_args()
     os.makedirs(args.out_dir, exist_ok=True)
@@ -578,6 +659,7 @@ def main():
         if p:
             print(f"[OK] Top-and-Bottom-{args.plot_topk} {args.plot_metric.upper()} plot -> {p}")
 
+    """	
     if args.plot_heatmap:
         pad_value = np.nan if args.heatmap_pad == "nan" else 0.0
         names, M = build_pmi_matrix(df_un, cats_id2name, args.heatmap_max_cats,
@@ -587,7 +669,26 @@ def main():
         else:
             save_heatmap(names, M, args.plot_heatmap, cmap_name="bwr")
             print(f"[OK] PMI heatmap -> {args.plot_heatmap} (C={len(names)})")
+    """
 
+	if args.plot_heatmap:
+		pad_value = np.nan if args.heatmap_pad == "nan" else 0.0
+		if args.heatmap_metric == "pmi":
+			names, M = build_pmi_matrix(df_un, cats_id2name, args.heatmap_max_cats,
+										args.heatmap_sample_seed, pad_value)
+			if len(names) == 0:
+				print("[WARN] Heatmap requested but no eligible categories; skipping.")
+			else:
+				save_heatmap(names, M, args.plot_heatmap, cmap_name="bwr")
+				print(f"[OK] PMI heatmap -> {args.plot_heatmap} (C={len(names)})")
+		else:
+			names, M = build_nc_matrix_oriented(df_un, cats_id2name, args.heatmap_max_cats,
+												args.heatmap_sample_seed, pad_value)
+			if len(names) == 0:
+				print("[WARN] Heatmap requested but no eligible categories; skipping.")
+			else:
+				save_heatmap_nc_oriented(names, M, args.plot_heatmap, cmap_name="bwr")
+				print(f"[OK] NC heatmap (oriented) -> {args.plot_heatmap} (C={len(names)})")
 
 if __name__ == "__main__":
     main()
