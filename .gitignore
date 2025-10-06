@@ -209,3 +209,6 @@ __marimo__/
 # custom directories and files
 eval_typical_atypical_eval_for_detection/pmi_subset_project/dump/*
 eval_typical_atypical_eval_for_detection/pmi_subset_project/outputs*
+eval_typical_atypical_eval_for_detection/create_typical_atypical_subsets/dump/*
+eval_typical_atypical_eval_for_detection/create_typical_atypical_subsets/outputs/*
+eval_typical_atypical_eval_for_detection/*.swp
