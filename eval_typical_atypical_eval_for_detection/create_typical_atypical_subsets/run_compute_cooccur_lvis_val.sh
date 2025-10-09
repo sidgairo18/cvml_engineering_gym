@@ -17,4 +17,5 @@ python scripts/compute_cooccur.py \
   --plot_topk 20 --plot_metric pmi \
   --plot_heatmap "$OUT_DIR/heatmap_pmi_top80.png" \
   --heatmap_max_cats 80 \
-  --heatmap_sample_seed 3407
+  --heatmap_sample_seed 3407 \
+  --heatmap_metric nc

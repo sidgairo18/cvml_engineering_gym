@@ -671,24 +671,24 @@ def main():
             print(f"[OK] PMI heatmap -> {args.plot_heatmap} (C={len(names)})")
     """
 
-	if args.plot_heatmap:
-		pad_value = np.nan if args.heatmap_pad == "nan" else 0.0
-		if args.heatmap_metric == "pmi":
-			names, M = build_pmi_matrix(df_un, cats_id2name, args.heatmap_max_cats,
-										args.heatmap_sample_seed, pad_value)
-			if len(names) == 0:
-				print("[WARN] Heatmap requested but no eligible categories; skipping.")
-			else:
-				save_heatmap(names, M, args.plot_heatmap, cmap_name="bwr")
-				print(f"[OK] PMI heatmap -> {args.plot_heatmap} (C={len(names)})")
-		else:
-			names, M = build_nc_matrix_oriented(df_un, cats_id2name, args.heatmap_max_cats,
-												args.heatmap_sample_seed, pad_value)
-			if len(names) == 0:
-				print("[WARN] Heatmap requested but no eligible categories; skipping.")
-			else:
-				save_heatmap_nc_oriented(names, M, args.plot_heatmap, cmap_name="bwr")
-				print(f"[OK] NC heatmap (oriented) -> {args.plot_heatmap} (C={len(names)})")
+    if args.plot_heatmap:
+        pad_value = np.nan if args.heatmap_pad == "nan" else 0.0
+        if args.heatmap_metric == "pmi":
+            names, M = build_pmi_matrix(df_un, cats_id2name, args.heatmap_max_cats,
+                                        args.heatmap_sample_seed, pad_value)
+            if len(names) == 0:
+                print("[WARN] Heatmap requested but no eligible categories; skipping.")
+            else:
+                save_heatmap(names, M, args.plot_heatmap, cmap_name="bwr")
+                print(f"[OK] PMI heatmap -> {args.plot_heatmap} (C={len(names)})")
+        else:
+            names, M = build_nc_matrix_oriented(df_un, cats_id2name, args.heatmap_max_cats,
+                                                args.heatmap_sample_seed, pad_value)
+            if len(names) == 0:
+                print("[WARN] Heatmap requested but no eligible categories; skipping.")
+            else:
+                save_heatmap_nc_oriented(names, M, args.plot_heatmap, cmap_name="bwr")
+                print(f"[OK] NC heatmap (oriented) -> {args.plot_heatmap} (C={len(names)})")
 
 if __name__ == "__main__":
     main()
