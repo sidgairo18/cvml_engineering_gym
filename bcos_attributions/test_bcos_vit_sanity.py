@@ -150,6 +150,33 @@ def _routing_alpha(
 
     raise ValueError("Unknown routing mode. Use 'attn', 'rollout', or 'uniform'.")
 
+# helper to compute contribution breakdown
+def _contrib_breakdown_dict(terms: dict, total_tensor: torch.Tensor, eps: float = 1e-12):
+    """
+    Build a readable contribution report:
+      - value (signed)
+      - pct_of_total (signed %)
+      - abs_pct_of_total (|value| / |total| %)
+      - sum_terms and residual = sum_terms - total
+    """
+    total = float(total_tensor.detach().cpu())
+    denom = total if abs(total) > eps else (eps if total >= 0 else -eps)
+
+    out = {"total": total}
+    sum_terms = 0.0
+    for name, t in terms.items():
+        v = float(t.detach().cpu()) if isinstance(t, torch.Tensor) else float(t)
+        out[name] = {
+            "value": v,
+            "pct_of_total": (v / denom) * 100.0,
+            "abs_pct_of_total": (abs(v) / (abs(total) + eps)) * 100.0
+        }
+        sum_terms += v
+    out["sum_terms"] = sum_terms
+    out["residual"] = sum_terms - total
+    return out
+
+
 
 # ---------- Main explainer with selectable routing (Euler-style) ----------
 def explain_vit_with_cls_pos(
@@ -237,6 +264,18 @@ def explain_vit_with_cls_pos(
             p_patches = pos_token
         p_term = pos_token.sum()
 
+    # ---- contribution breakdown (values and percentages) ----
+    p_patches_sum = p_patches.sum() if isinstance(p_patches, torch.Tensor) else torch.tensor(0.0, device=device)
+    contrib_terms = {
+        "x_term": x_term,
+        "cls_term": c_term,
+        "pos_term": p_term,
+        "pos_cls_term": p_cls,
+        "pos_patches_term": p_patches_sum,
+    }
+    contrib = _contrib_breakdown_dict(contrib_terms, y_scalar)
+
+
     # ---- routing α and patch map ----
     with torch.no_grad():
         H_p, W_p = _get_patch_hw(model, x_fwd.detach())
@@ -316,6 +355,8 @@ def explain_vit_with_cls_pos(
         "y_index": int(y_index),
         "routing_mode": redistribute,
     }
+    info["contrib_breakdown"] = contrib
+
     if return_parts:
         info.update({
             "pixel_map_image": img_map_px.detach().cpu(),
@@ -549,6 +590,40 @@ def ig_explain_vit_with_cls_pos(
 
     return pixel_map_total, info
 
+def _residual_and_weight(name, map_sum_t, target_t, parts=None, eps=1e-12):
+    """
+    name: string label (e.g., 'image', 'joint')
+    map_sum_t, target_t: tensors (or floats) for the sum of your map and the scalar it should match
+    parts: optional dict of component tensors (e.g., {'x': Sx, 'cls': Sc, 'pos': Sp}) to compute weights
+    """
+    target = float(target_t.detach().cpu() if hasattr(target_t, 'detach') else target_t)
+    map_sum = float(map_sum_t.detach().cpu() if hasattr(map_sum_t, 'detach') else map_sum_t)
+    denom = abs(target) if abs(target) > eps else eps
+
+    residual = map_sum - target
+    report = {
+        "name": name,
+        "target": target,
+        "map_sum": map_sum,
+        "residual": residual,
+        "residual_pct_abs": abs(residual) / denom * 100.0,
+        "residual_pct_signed": (residual / (target if abs(target) > eps else eps)) * 100.0
+    }
+
+    if parts is not None and len(parts) > 0:
+        # signed share vs target, and absolute share vs sum of absolute parts
+        abs_sum_parts = 0.0
+        for v in parts.values():
+            abs_sum_parts += abs(float(v.detach().cpu() if hasattr(v, 'detach') else v))
+        abs_sum_parts = abs_sum_parts if abs_sum_parts > eps else eps
+
+        for k, v in parts.items():
+            v_float = float(v.detach().cpu() if hasattr(v, 'detach') else v)
+            report[f"{k}_share_pct_signed_vs_target"] = (v_float / (target if abs(target) > eps else eps)) * 100.0
+            report[f"{k}_share_pct_abs_vs_parts"] = (abs(v_float) / abs_sum_parts) * 100.0
+    return report
+
+
 
 # ---------- Conditional image-only Euler ----------
 def conditional_euler_explain_x(
@@ -612,6 +687,14 @@ def conditional_euler_explain_x(
         "sum_pixel_map": float(S_map.detach().cpu()),
         "y_index": int(y_index),
     }
+
+    # NEW: residual % and image weight %
+    info["residual_report"] = _residual_and_weight(
+        name="image_only",
+        map_sum_t=S_map,
+        target_t=delta_x,
+        parts={"image": S_map}  # lets the helper also print image share vs Δx
+    )
     return img_map_px, info
 
 if __name__ == "__main__":                                                                
@@ -620,19 +703,27 @@ if __name__ == "__main__":
     counts_passed = 0
     for idx in range(no_of_runs):
         curr_model = dino_like_vitc_b_patch1_14()
+        curr_model.eval()
+        test_input = torch.randn((1, 6, 224, 224))
+        _, info = conditional_euler_explain_x(curr_model,
+                                    test_input,
+                                    atol=1e-7, rtol=1e-8)
+        print(idx, info)
+        """
         try:
-            test_input = torch.randn((1, 6, 224, 224))
-            _, _ = explain_vit_with_cls_pos(curr_model,
+            _, info = explain_vit_with_cls_pos(curr_model,
                                             test_input,
                                             scale_joint=1.0,
                                             atol=1e-7,
                                             rtol=1e-8)
             counts_passed += 1
+            print("Info", info)
             print(f"Idx: {idx}, Passed!")
         except:
             print(f"Idx: {idx}, Failed!")
             pass
 
         print(f"So far, passed: {counts_passed}, failed: {idx+1-counts_passed}")
+        """
 
     exit(0)
