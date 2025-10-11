@@ -1,0 +1,28 @@
+# 1) Write requirements (CUDA 12.1 torch wheels)
+cat > requirements-gpu-cu121.txt << 'REQ'
+--extra-index-url https://download.pytorch.org/whl/cu121
+torch>=2.2
+torchvision>=0.17
+torchaudio>=2.2
+
+numpy>=1.23
+Pillow>=10.0
+opencv-python>=4.8
+tqdm>=4.66
+scipy>=1.10
+scikit-image>=0.22
+einops>=0.6
+
+pycocotools>=2.0.7
+lvis
+
+huggingface_hub>=0.22
+safetensors>=0.4.3
+accelerate>=0.25
+transformers>=4.45
+git+https://github.com/huggingface/diffusers@main
+REQ
+
+# 2) Install
+python -m pip install -r requirements-gpu-cu121.txt
+
