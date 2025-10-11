@@ -9,11 +9,18 @@ Supports backends:
   - 'controlnet'                                 (StableDiffusionControlNetInpaintPipeline + lllyasviel/sd-controlnet-inpaint)
   - 'qwen_controlnet'                            (QwenImageControlNetInpaintPipeline + QwenImageControlNetModel)
 
+Strategies:
+  - 'random'       : remove k instances at random (size-limited)
+  - 'sizebased'    : prefer smaller instances (p ∝ 1/area)
+  - 'hardnegative' : prefer classes with lower provided weights
+  - 'all'          : for each image, produce one edited image per class present,
+                     removing ALL instances of that class (subject to area limit)
+
 Paper alignment (Not Using the Car to See the Sidewalk — Quantifying & Controlling Context Effects...):
   - Remove object with GT mask then inpaint (§3.1)
   - Skip very large objects (default area <= 30% of image)
   - Dilate mask slightly (default 5 px)
-  - Instance selection strategies: random / sizebased / hardnegative
+  - Instance selection strategies: random / sizebased / hardnegative / all
 
 Outputs:
   - <out_dir>/images/<split>/*.jpg               (edited images)
@@ -23,30 +30,30 @@ Outputs:
 -----------------------------------------------------------------------
 Examples
 
-COCO train2017 + Qwen ControlNet:
+COCO train2017 + Qwen ControlNet + strategy=all:
 python make_inpainted_dataset.py \
   --dataset coco \
   --images-dir /data/coco/images/train2017 \
   --ann-file /data/coco/annotations/instances_train2017.json \
-  --out-dir /data/out/coco_qwen_inpaint \
+  --out-dir /data/out/coco_qwen_inpaint_all \
   --split-name train2017 \
-  --strategy sizebased --k-remove 1 --area-max 0.30 --dilate 5 \
+  --strategy all --area-max 0.30 --dilate 5 \
   --backend qwen_controlnet \
   --qwen-base Qwen/Qwen-Image \
   --qwen-controlnet InstantX/Qwen-Image-ControlNet-Inpainting \
-  --prompt "一张自然的场景，背景干净、无缝填充，与上下文一致" \
-  --neg-prompt "模糊、伪影、失真、文字、水印" \
+  --prompt "clean natural fill, seamless background, consistent lighting" \
+  --neg-prompt "blurry, artifacts, distorted, watermark" \
   --sd-steps 30 --qwen-true-cfg-scale 4.0 --qwen-cond-scale 1.0 \
   --dtype bf16 --device cuda
 
-LVIS v1.0 train + SD ControlNet (English prompt):
+LVIS v1.0 train + SD ControlNet (English prompt) + sizebased:
 python make_inpainted_dataset.py \
   --dataset lvis \
   --images-dir /data/coco/images/train2017 \
   --ann-file /data/lvis/lvis_v1_train.json \
   --out-dir /data/out/lvis_ctl_inpaint \
   --split-name train2017 \
-  --strategy random --k-remove 1 --area-max 0.30 --dilate 5 \
+  --strategy sizebased --k-remove 1 --area-max 0.30 --dilate 5 \
   --backend controlnet \
   --prompt "clean natural fill, consistent textures and lighting" \
   --neg-prompt "blurry, artifacts, distorted, watermark" \
@@ -58,6 +65,7 @@ import argparse
 import json
 import os
 import random
+import re
 import sys
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
@@ -349,6 +357,26 @@ def rle_or_poly_to_mask(seg, h, w) -> np.ndarray:
     return (m > 0).astype(np.uint8)
 
 
+def _sanitize_for_name(s: str) -> str:
+    """Make a safe short token for filenames."""
+    s = s.strip().lower()
+    s = re.sub(r"\s+", "_", s)
+    s = re.sub(r"[^a-z0-9_.-]", "", s)
+    return s or "unk"
+
+
+def _instance_area(ann: Dict[str, Any], H: int, W: int) -> float:
+    """Return instance area (compute from mask if missing)."""
+    area = ann.get("area", None)
+    if area is None or area <= 0:
+        seg = ann.get("segmentation", None)
+        if seg is None:
+            return 0.0
+        m = rle_or_poly_to_mask(seg, H, W)
+        return float(m.sum())
+    return float(area)
+
+
 def pick_instances(
     anns: List[Dict[str, Any]],
     H: int,
@@ -552,12 +580,116 @@ def process_dataset(args):
         if img is None:
             continue
         H, W = img.shape[:2]
+        img_area = H * W
 
         anns = get_img_anns(im["id"])
         if not anns:
             continue
 
-        # sample instances to remove
+        # ---------- strategy 'all' ----------
+        if args.strategy == "all":
+            # Collect classes present (excluding crowd)
+            cat_ids_present = []
+            seen = set()
+            for a in anns:
+                if a.get("iscrowd", 0) == 1:
+                    continue
+                cid = int(a["category_id"])
+                if cid not in seen:
+                    seen.add(cid)
+                    cat_ids_present.append(cid)
+
+            # For each class present, remove ALL its instances (subject to area_max)
+            for cid in cat_ids_present:
+                class_insts = [a for a in anns if a.get("iscrowd", 0) != 1 and int(a["category_id"]) == cid]
+                if not class_insts:
+                    continue
+
+                # Strict area check: every instance of this class must satisfy area_max
+                too_big = False
+                for a in class_insts:
+                    area = _instance_area(a, H, W)
+                    if (area / img_area) > args.area_max:
+                        too_big = True
+                        break
+                if too_big:
+                    # Skip this class variant to avoid overly large holes
+                    continue
+
+                # Build mask from ALL instances of this class
+                mask = build_mask_for_instances(class_insts, H, W, args.dilate)
+                if mask.max() == 0:
+                    continue
+
+                # Inpaint and save
+                img_inp = inpainter.inpaint(img, mask)
+
+                base = Path(im["file_name"]).name
+                stem, ext = os.path.splitext(base)
+                cat_name = cat_name_from_id.get(cid, str(cid))
+                cat_tok = _sanitize_for_name(cat_name)
+                new_name = f"{stem}_rmALL_{cat_tok}{ext or '.jpg'}"
+                out_path = out_images_dir / new_name
+                out_path.parent.mkdir(parents=True, exist_ok=True)
+                ok = cv2.imwrite(str(out_path), img_inp)
+                if not ok:
+                    continue
+
+                # New image entry
+                new_img_id = next(img_id_gen)
+                new_im = dict(im)
+                new_im["id"] = new_img_id
+                new_im["file_name"] = str(Path("images") / args.split_name / new_name)
+                new_images.append(new_im)
+
+                # Copy annotations except those of this class
+                removed_ids = set(a["id"] for a in class_insts)
+                for a in anns:
+                    if a["id"] in removed_ids:
+                        continue
+                    new_a = dict(a)
+                    new_a["id"] = next(ann_id_gen)
+                    new_a["image_id"] = new_img_id
+                    new_annotations.append(new_a)
+
+                # Metadata
+                removed = [
+                    {
+                        "ann_id": a["id"],
+                        "category_id": a["category_id"],
+                        "category_name": cat_name_from_id.get(a["category_id"], str(a["category_id"])),
+                        "area": float(a.get("area", _instance_area(a, H, W))),
+                        "bbox": a.get("bbox", None),
+                    }
+                    for a in class_insts
+                ]
+                meta = {
+                    "orig_image_id": im["id"],
+                    "new_image_id": new_img_id,
+                    "orig_file": im["file_name"],
+                    "new_file": new_im["file_name"],
+                    "removed": removed,
+                    "dilate_px": args.dilate,
+                    "backend": args.backend,
+                    "strategy": "all",
+                    "removed_category_id": cid,
+                    "removed_category_name": cat_name,
+                    "area_max": args.area_max,
+                }
+                meta_fp.write(json.dumps(meta, ensure_ascii=False) + "\n")
+
+                count_processed += 1
+                if args.max_images and count_processed >= args.max_images:
+                    break
+
+            if args.max_images and count_processed >= args.max_images:
+                break
+
+            # Done with this source image
+            continue
+        # ---------- /strategy 'all' ----------
+
+        # Single-variant path (random/sizebased/hardnegative)
         selected = pick_instances(
             anns,
             H,
@@ -607,7 +739,7 @@ def process_dataset(args):
                 "ann_id": a["id"],
                 "category_id": a["category_id"],
                 "category_name": cat_name_from_id.get(a["category_id"], str(a["category_id"])),
-                "area": float(a.get("area", 0.0)),
+                "area": float(a.get("area", _instance_area(a, H, W))),
                 "bbox": a.get("bbox", None),
             }
             for a in selected
@@ -656,8 +788,8 @@ def parse_args():
     p.add_argument("--split-name", required=True, help="Split name used in output path (e.g., train2017).")
 
     # Removal & sampling
-    p.add_argument("--strategy", choices=["random", "sizebased", "hardnegative"], default="sizebased")
-    p.add_argument("--k-remove", type=int, default=1, help="Number of instances to remove per edited image.")
+    p.add_argument("--strategy", choices=["random", "sizebased", "hardnegative", "all"], default="sizebased")
+    p.add_argument("--k-remove", type=int, default=1, help="Number of instances to remove per edited image (ignored for 'all').")
     p.add_argument("--area-max", type=float, default=0.30, help="Reject instances larger than this image-area fraction.")
     p.add_argument("--dilate", type=int, default=5, help="Mask dilation in pixels.")
     p.add_argument(
