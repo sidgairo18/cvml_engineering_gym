@@ -221,7 +221,6 @@ def predict_labels_list_mode(
     allowed_map = {normalize_label(x): x for x in allowed_labels}
 
     if obj is None or "labels" not in obj or not isinstance(obj["labels"], list):
-        # Fallback: string contains label names
         text_norm = normalize_label(text)
         found = []
         for key, original in allowed_map.items():
@@ -249,9 +248,9 @@ def choose_hybrid_label_subset(
 ) -> List[str]:
     """
     Pick subset S = candidates (capped) ∪ sampled negatives (from remaining labels).
-    Sampling is deterministic per image_id (so runs are reproducible).
+    Sampling is deterministic per image_id.
     """
-    cand = list(dict.fromkeys(candidates))  # unique preserve order
+    cand = list(dict.fromkeys(candidates))
     if max_candidates > 0:
         cand = cand[:max_candidates]
 
@@ -266,7 +265,6 @@ def choose_hybrid_label_subset(
         neg = []
 
     subset = cand + neg
-    # keep stable order and uniqueness
     subset = list(dict.fromkeys(subset))
     return subset
 
@@ -284,8 +282,8 @@ class EvalResults:
     precision_macro: float
     recall_macro: float
     f1_macro: float
-    mAP: Optional[float] = None          # yesno: true; hybrid: approx; list: None
-    mAP_name: Optional[str] = None       # indicates what mAP means
+    mAP: Optional[float] = None
+    mAP_name: Optional[str] = None
     ap_per_class: Optional[List[float]] = None
     class_names: Optional[List[str]] = None
 
@@ -302,7 +300,6 @@ def evaluate(
     threshold: float,
     max_new_tokens: int,
     save_json: Optional[str],
-    # hybrid params
     hybrid_negatives: int,
     hybrid_seed: int,
     hybrid_max_candidates: int,
@@ -331,13 +328,15 @@ def evaluate(
         torch_dtype=(amp_dtype if amp_dtype in (torch.float16, torch.bfloat16) else torch.float32),
         low_cpu_mem_usage=True,
     ).to(device)
+
     processor = AutoProcessor.from_pretrained(model_id)
+
+    # >>> CHANGE REQUESTED: set padding side to left (recommended for generation)
+    processor.tokenizer.padding_side = "left"
 
     N = len(img_ids)
     y_true = np.zeros((N, num_classes), dtype=np.int32)
     y_pred = np.zeros((N, num_classes), dtype=np.int32)
-
-    # store scores for yesno + hybrid (hybrid uses zero-fill for unscored)
     y_score = np.zeros((N, num_classes), dtype=np.float32) if mode in ("yesno", "hybrid") else None
 
     name_to_idx = {name: i for i, name in enumerate(labels)}
@@ -347,7 +346,6 @@ def evaluate(
         path = os.path.join(img_dir, info["file_name"])
         image = Image.open(path).convert("RGB")
 
-        # ground-truth multi-hot
         ann_ids = coco.getAnnIds(imgIds=[img_id])
         anns = coco.loadAnns(ann_ids)
         present = {a["category_id"] for a in anns}
@@ -382,7 +380,6 @@ def evaluate(
             y_pred[i, idxs] = 1
 
         elif mode == "hybrid":
-            # Step 1: candidates via list prompt
             candidates = predict_labels_list_mode(
                 model=model,
                 processor=processor,
@@ -393,7 +390,6 @@ def evaluate(
                 max_new_tokens=max_new_tokens,
             )
 
-            # Step 2: choose subset to score = candidates + sampled negatives
             subset = choose_hybrid_label_subset(
                 all_labels=labels,
                 candidates=candidates,
@@ -403,7 +399,6 @@ def evaluate(
                 max_candidates=hybrid_max_candidates,
             )
 
-            # Step 3: score only that subset
             subset_scores = score_labels_yesno_ab(
                 model=model,
                 processor=processor,
@@ -414,17 +409,14 @@ def evaluate(
                 amp_dtype=amp_dtype,
             )
 
-            # Step 4: write into full 80-dim score vector (others remain 0)
             for lab, sc in zip(subset, subset_scores.tolist()):
                 y_score[i, name_to_idx[lab]] = float(sc)
 
-            # Hard preds from threshold; unscored are 0 => predicted absent
             y_pred[i] = (y_score[i] >= threshold).astype(np.int32)
 
         else:
             raise ValueError(f"Unknown mode: {mode}")
 
-    # P/R/F1
     p_micro, r_micro, f1_micro, _ = precision_recall_fscore_support(
         y_true, y_pred, average="micro", zero_division=0
     )
@@ -445,7 +437,6 @@ def evaluate(
         ap_per_class = [float(x) if np.isfinite(x) else float("nan") for x in ap.tolist()]
 
     elif mode == "hybrid":
-        # IMPORTANT: This is an approximation because many labels are never scored (forced to 0).
         valid = y_true.sum(axis=0) > 0
         ap = np.full((num_classes,), np.nan, dtype=np.float32)
         ap[valid] = average_precision_score(y_true[:, valid], y_score[:, valid], average=None)
@@ -558,43 +549,3 @@ def main():
 if __name__ == "__main__":
     main()
 
-'''
-1) yesno (full 80-class scoring → AP/mAP + P/R/F1)
-python eval_llava_coco_multilabel.py \
-  --coco_root /path/to/coco \
-  --split val2017 \
-  --mode yesno \
-  --device cuda \
-  --dtype fp16 \
-  --chunk_size 16 \
-  --threshold 0.5 \
-  --save_json results_yesno_val2017.json
-
-  2) list (single prompt label set → P/R/F1 only)
-python eval_llava_coco_multilabel.py \
-  --coco_root /path/to/coco \
-  --split val2017 \
-  --mode list \
-  --device cuda \
-  --dtype fp16 \
-  --max_new_tokens 128 \
-  --save_json results_list_val2017.json
-
-3) hybrid (list → score candidates + sampled negatives → P/R/F1 + approx mAP)
-python eval_llava_coco_multilabel.py \
-  --coco_root /path/to/coco \
-  --split val2017 \
-  --mode hybrid \
-  --device cuda \
-  --dtype fp16 \
-  --chunk_size 16 \
-  --threshold 0.5 \
-  --max_new_tokens 128 \
-  --hybrid_max_candidates 20 \
-  --hybrid_negatives 16 \
-  --hybrid_seed 123 \
-  --save_json results_hybrid_val2017.json
-
-
-Optional quick sanity runs: add --limit 50 (or --limit 200) to any of them.
-'''

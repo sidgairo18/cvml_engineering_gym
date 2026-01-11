@@ -1,0 +1,23 @@
+name: llava_coco
+channels:
+  - pytorch
+  - nvidia
+  - conda-forge
+dependencies:
+  - python=3.10
+  - pytorch
+  - torchvision
+  - torchaudio
+  - pytorch-cuda=12.1
+  - pycocotools
+  - scikit-learn
+  - numpy
+  - pillow
+  - tqdm
+  - requests
+  - pip
+  - pip:
+      - "transformers>=4.48.2"
+      - accelerate
+      - safetensors
+
