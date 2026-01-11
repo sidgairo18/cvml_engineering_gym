@@ -212,3 +212,5 @@ eval_typical_atypical_eval_for_detection/pmi_subset_project/outputs*
 eval_typical_atypical_eval_for_detection/create_typical_atypical_subsets/dump/*
 eval_typical_atypical_eval_for_detection/create_typical_atypical_subsets/outputs/*
 eval_typical_atypical_eval_for_detection/*.swp
+make_aug_dataset_coco_lvis/archive/*
+make_aug_dataset_coco_lvis/Inpaint-Anything/*

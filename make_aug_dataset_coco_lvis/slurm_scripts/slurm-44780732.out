@@ -1,0 +1,59 @@
+/BS/dnn_interpretablity_robustness_representation_learning_2/work/libs/miniforge3/envs/inpaint-dset/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+/BS/dnn_interpretablity_robustness_representation_learning_2/work/libs/miniforge3/envs/inpaint-dset/lib/python3.10/site-packages/timm/models/registry.py:4: FutureWarning: Importing from timm.models.registry is deprecated, please import via timm.models
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.models", FutureWarning)
+/BS/generative_modelling_for_image_understanding/work/my_projects/github_repos/cvml_engineering_gym/make_aug_dataset_coco_lvis/Inpaint-Anything/sam_repo/segment_anything/modeling/tiny_vit_sam.py:657: UserWarning: Overwriting tiny_vit_5m_224 in registry with segment_anything.modeling.tiny_vit_sam.tiny_vit_5m_224. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  return register_model(fn_wrapper)
+/BS/generative_modelling_for_image_understanding/work/my_projects/github_repos/cvml_engineering_gym/make_aug_dataset_coco_lvis/Inpaint-Anything/sam_repo/segment_anything/modeling/tiny_vit_sam.py:657: UserWarning: Overwriting tiny_vit_11m_224 in registry with segment_anything.modeling.tiny_vit_sam.tiny_vit_11m_224. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  return register_model(fn_wrapper)
+/BS/generative_modelling_for_image_understanding/work/my_projects/github_repos/cvml_engineering_gym/make_aug_dataset_coco_lvis/Inpaint-Anything/sam_repo/segment_anything/modeling/tiny_vit_sam.py:657: UserWarning: Overwriting tiny_vit_21m_224 in registry with segment_anything.modeling.tiny_vit_sam.tiny_vit_21m_224. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  return register_model(fn_wrapper)
+/BS/generative_modelling_for_image_understanding/work/my_projects/github_repos/cvml_engineering_gym/make_aug_dataset_coco_lvis/Inpaint-Anything/sam_repo/segment_anything/modeling/tiny_vit_sam.py:657: UserWarning: Overwriting tiny_vit_21m_384 in registry with segment_anything.modeling.tiny_vit_sam.tiny_vit_21m_384. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  return register_model(fn_wrapper)
+/BS/generative_modelling_for_image_understanding/work/my_projects/github_repos/cvml_engineering_gym/make_aug_dataset_coco_lvis/Inpaint-Anything/sam_repo/segment_anything/modeling/tiny_vit_sam.py:657: UserWarning: Overwriting tiny_vit_21m_512 in registry with segment_anything.modeling.tiny_vit_sam.tiny_vit_21m_512. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  return register_model(fn_wrapper)
+/BS/dnn_interpretablity_robustness_representation_learning_2/work/libs/miniforge3/envs/inpaint-dset/lib/python3.10/site-packages/pytorch_lightning/utilities/imports.py:22: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import DistributionNotFound
+2025-10-13 11:58:40.107023: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+usage: make_inpainted_dataset_inpainting_anything.py [-h] --dataset
+                                                     {coco,lvis} --images-dir
+                                                     IMAGES_DIR --ann-file
+                                                     ANN_FILE --out-dir
+                                                     OUT_DIR --split-name
+                                                     SPLIT_NAME
+                                                     [--strategy {random,sizebased,hardnegative,all}]
+                                                     [--k-remove K_REMOVE]
+                                                     [--area-max AREA_MAX]
+                                                     [--dilate DILATE]
+                                                     [--class-weights CLASS_WEIGHTS]
+                                                     [--sam-refine]
+                                                     [--sam-model-type {vit_h,vit_l,vit_b,vit_t}]
+                                                     [--sam-ckpt SAM_CKPT]
+                                                     [--lama-config LAMA_CONFIG]
+                                                     [--lama-ckpt LAMA_CKPT]
+                                                     [--device DEVICE]
+                                                     [--process-prob PROCESS_PROB]
+                                                     [--max-images MAX_IMAGES]
+                                                     [--max-source-images MAX_SOURCE_IMAGES]
+                                                     [--seed SEED]
+                                                     [--save-preview]
+                                                     [--preview-dir PREVIEW_DIR]
+                                                     [--preview-alpha PREVIEW_ALPHA]
+                                                     [--preview-max-edge PREVIEW_MAX_EDGE]
+                                                     [--restore-overlaps-after]
+                                                     [--restore-margin RESTORE_MARGIN]
+                                                     [--debug-mask-dir DEBUG_MASK_DIR]
+make_inpainted_dataset_inpainting_anything.py: error: the following arguments are required: --dataset, --images-dir, --ann-file, --out-dir, --split-name
+Detectron v2 is not installed
+_SAM_OK True _LAMA_OK True
+/var/lib/slurm/slurmd/job44780732/slurm_script: line 36: --dataset: command not found
+/var/lib/slurm/slurmd/job44780732/slurm_script: line 37: --images-dir: command not found
+/var/lib/slurm/slurmd/job44780732/slurm_script: line 38: --ann-file: command not found
+/var/lib/slurm/slurmd/job44780732/slurm_script: line 39: --out-dir: command not found
+/var/lib/slurm/slurmd/job44780732/slurm_script: line 40: --split-name: command not found
+/var/lib/slurm/slurmd/job44780732/slurm_script: line 41: --strategy: command not found
+/var/lib/slurm/slurmd/job44780732/slurm_script: line 42: --dilate: command not found
+/var/lib/slurm/slurmd/job44780732/slurm_script: line 43: --restore-overlaps-after: command not found
+/var/lib/slurm/slurmd/job44780732/slurm_script: line 44: --lama-ckpt: command not found
+/var/lib/slurm/slurmd/job44780732/slurm_script: line 45: --lama-config: command not found
