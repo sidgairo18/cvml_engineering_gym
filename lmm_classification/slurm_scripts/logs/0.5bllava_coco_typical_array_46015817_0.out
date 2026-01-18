@@ -1,0 +1,21 @@
+loading annotations into memory...
+Done (t=0.28s)
+creating index...
+index created!
+COCO ann: ./coco_typicality_annotations/typical.json
+COCO img: /BS/generative_modelling_for_image_understanding/nobackup/data/DETECTRON2_DATASETS/coco/train2017
+Num classes: 80
+Model: llava-hf/llava-onevision-qwen2-0.5b-ov-hf
+Mode: two_gated | 4bit: False | dtype: torch.float16
+Batch size: 8
+Slicing: start_idx=0, end_idx=240, k=-1, shuffle=False
+[two_gated] 0/240 img_id=1 mapped=['tennis racket']
+[two_gated] 100/240 img_id=101 mapped=['bicycle', 'bottle', 'cup', 'donut', 'person']
+[two_gated] 200/240 img_id=201 mapped=['fork', 'knife']
+
+=== two_gated | llava-hf/llava-onevision-qwen2-0.5b-ov-hf ===
+Micro P/R/F1: 0.8244 / 0.5468 / 0.6575
+Macro P/R/F1: 0.5643 / 0.4230 / 0.4615
+Macro mAP (bin-scores): 0.4681
+
+Wrote JSONL to: outputs/shards/typical_llava0.5b_two_gated_shard_0.jsonl

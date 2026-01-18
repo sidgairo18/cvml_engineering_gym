@@ -1,0 +1,28 @@
+loading annotations into memory...
+Done (t=0.59s)
+creating index...
+index created!
+COCO ann: /BS/generative_modelling_for_image_understanding/nobackup/data/DETECTRON2_DATASETS/coco/annotations/instances_val2017.json
+COCO img: /BS/generative_modelling_for_image_understanding/nobackup/data/DETECTRON2_DATASETS/coco/val2017
+Num classes: 80
+Model: llava-hf/llava-onevision-qwen2-7b-ov-hf
+Mode: two_gated | 4bit: False | dtype: torch.float16
+Batch size: 8
+Slicing: start_idx=2000, end_idx=3000, k=-1, shuffle=False
+[two_gated] 0/1000 img_id=398742 mapped=['person']
+[two_gated] 100/1000 img_id=283412 mapped=['cup', 'dog']
+[two_gated] 200/1000 img_id=60823 mapped=['bird', 'cow', 'horse', 'person']
+[two_gated] 300/1000 img_id=498709 mapped=['motorcycle']
+[two_gated] 400/1000 img_id=249180 mapped=[]
+[two_gated] 500/1000 img_id=180878 mapped=['cake', 'car', 'cell phone']
+[two_gated] 600/1000 img_id=477288 mapped=['person', 'umbrella']
+[two_gated] 700/1000 img_id=494634 mapped=['cat']
+[two_gated] 800/1000 img_id=565045 mapped=[]
+[two_gated] 900/1000 img_id=468245 mapped=['bed']
+
+=== two_gated | llava-hf/llava-onevision-qwen2-7b-ov-hf ===
+Micro P/R/F1: 0.9671 / 0.5599 / 0.7092
+Macro P/R/F1: 0.9039 / 0.5584 / 0.6536
+Macro mAP (bin-scores): 0.5611
+
+Wrote JSONL to: outputs/shards/val2017_llava7b_two_gated_shard_2.jsonl

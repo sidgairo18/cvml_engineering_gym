@@ -1,0 +1,28 @@
+loading annotations into memory...
+Done (t=0.56s)
+creating index...
+index created!
+COCO ann: /BS/generative_modelling_for_image_understanding/nobackup/data/DETECTRON2_DATASETS/coco/annotations/instances_val2017.json
+COCO img: /BS/generative_modelling_for_image_understanding/nobackup/data/DETECTRON2_DATASETS/coco/val2017
+Num classes: 80
+Model: llava-hf/llava-onevision-qwen2-0.5b-ov-hf
+Mode: two_gated | 4bit: False | dtype: torch.float16
+Batch size: 8
+Slicing: start_idx=4000, end_idx=5000, k=-1, shuffle=False
+[two_gated] 0/1000 img_id=128112 mapped=['person', 'snowboard']
+[two_gated] 100/1000 img_id=135410 mapped=['bicycle', 'car', 'parking meter', 'person']
+[two_gated] 200/1000 img_id=314251 mapped=['motorcycle', 'person', 'traffic light']
+[two_gated] 300/1000 img_id=506933 mapped=['cell phone', 'clock', 'person']
+[two_gated] 400/1000 img_id=79969 mapped=['bench', 'chair', 'person', 'tennis racket', 'umbrella']
+[two_gated] 500/1000 img_id=6471 mapped=[]
+[two_gated] 600/1000 img_id=424642 mapped=['frisbee', 'orange', 'person', 'umbrella']
+[two_gated] 700/1000 img_id=155443 mapped=['bench', 'train']
+[two_gated] 800/1000 img_id=37751 mapped=['backpack', 'motorcycle', 'person']
+[two_gated] 900/1000 img_id=531135 mapped=[]
+
+=== two_gated | llava-hf/llava-onevision-qwen2-0.5b-ov-hf ===
+Micro P/R/F1: 0.7388 / 0.6383 / 0.6849
+Macro P/R/F1: 0.7019 / 0.6221 / 0.6345
+Macro mAP (bin-scores): 0.4913
+
+Wrote JSONL to: outputs/shards/val2017_llava0.5b_two_gated_shard_4.jsonl

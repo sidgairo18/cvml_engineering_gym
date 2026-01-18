@@ -500,10 +500,10 @@ def report_metrics(Y_true: np.ndarray, Y_pred: np.ndarray, name: str):
         ap_list.append(ap)
     map_macro = float(np.mean(ap_list)) if ap_list else 0.0
 
-    print(f"\n=== {name} ===")
-    print(f"Micro P/R/F1: {p_micro:.4f} / {r_micro:.4f} / {f1_micro:.4f}")
-    print(f"Macro P/R/F1: {p_macro:.4f} / {r_macro:.4f} / {f1_macro:.4f}")
-    print(f"Macro mAP (bin-scores): {map_macro:.4f}")
+    print(f"\n=== {name} ===", flush=True)
+    print(f"Micro P/R/F1: {p_micro:.4f} / {r_micro:.4f} / {f1_micro:.4f}", flush=True)
+    print(f"Macro P/R/F1: {p_macro:.4f} / {r_macro:.4f} / {f1_macro:.4f}", flush=True)
+    print(f"Macro mAP (bin-scores): {map_macro:.4f}", flush=True)
 
 
 # ----------------------------
@@ -627,13 +627,13 @@ def main():
     coco_set = {norm_phrase(x): x for x in coco_labels}
     alias_to_coco = build_alias_dict()
 
-    print("COCO ann:", ann_file)
-    print("COCO img:", img_dir)
-    print("Num classes:", len(coco_labels))
-    print("Model:", args.model_id)
-    print("Mode:", args.mode, "| 4bit:", args.load_4bit, "| dtype:", dtype)
-    print("Batch size:", args.batch_size)
-    print(f"Slicing: start_idx={args.start_idx}, end_idx={args.end_idx}, k={args.k}, shuffle={args.shuffle}")
+    print("COCO ann:", ann_file, flush=True)
+    print("COCO img:", img_dir, flush=True)
+    print("Num classes:", len(coco_labels), flush=True)
+    print("Model:", args.model_id, flush=True)
+    print("Mode:", args.mode, "| 4bit:", args.load_4bit, "| dtype:", dtype, flush=True)
+    print("Batch size:", args.batch_size, flush=True)
+    print(f"Slicing: start_idx={args.start_idx}, end_idx={args.end_idx}, k={args.k}, shuffle={args.shuffle}", flush=True)
 
     model, processor = load_model_and_processor(args.model_id, dtype=dtype, load_4bit=args.load_4bit)
 
@@ -651,7 +651,7 @@ def main():
     # args.k <= 0 => no cap
 
     if len(subset) == 0:
-        print("Empty subset after slicing. Exiting.")
+        print("Empty subset after slicing. Exiting.", flush=True)
         return
 
     Y_true = gt_multihot(coco, subset, catid_to_index, num_classes=len(coco_labels))
@@ -661,7 +661,7 @@ def main():
     if args.sanity_check:
         stamp = time.strftime("%Y%m%d_%H%M%S")
         sanity_dir = ensure_dir(os.path.join(args.sanity_out, f"{args.mode}_{stamp}"))
-        print("Sanity dump dir:", sanity_dir)
+        print("Sanity dump dir:", sanity_dir, flush=True)
 
     caption_prompt = build_prompt_caption(processor) if args.sanity_check else None
     jsonl_path = args.out_jsonl.strip() if args.out_jsonl.strip() else None
@@ -713,7 +713,7 @@ def main():
                     Y_pred[i, label_to_idx[lab]] = 1
 
             if args.verbose_every and (i % args.verbose_every == 0):
-                print(f"[{args.mode}] {i}/{n} img_id={img_id} mapped={mapped}")
+                print(f"[{args.mode}] {i}/{n} img_id={img_id} mapped={mapped}", flush=True)
 
             gt = get_gt_labels_for_img(coco, img_id)
 
@@ -750,11 +750,11 @@ def main():
     report_metrics(Y_true, Y_pred, name=f"{args.mode} | {args.model_id}")
 
     if args.sanity_check:
-        print(f"\nSanity artifacts written to: {sanity_dir}")
-        print("Each image has: <img_id>.png and <img_id>.json")
+        print(f"\nSanity artifacts written to: {sanity_dir}", flush=True)
+        print("Each image has: <img_id>.png and <img_id>.json", flush=True)
 
     if jsonl_path:
-        print(f"\nWrote JSONL to: {jsonl_path}")
+        print(f"\nWrote JSONL to: {jsonl_path}", flush=True)
 
     writer.close()
 

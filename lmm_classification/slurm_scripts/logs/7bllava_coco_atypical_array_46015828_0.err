@@ -1,0 +1,6 @@
+mkdir: cannot create directory ‘logs’: File exists
+/BS/dnn_interpretablity_robustness_representation_learning_2/work/libs/miniforge3/envs/llava_coco/lib/python3.10/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+`torch_dtype` is deprecated! Use `dtype` instead!
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:26<01:20, 26.91s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:46<00:45, 22.90s/it]Loading checkpoint shards:  75%|███████▌  | 3/4 [01:06<00:21, 21.54s/it]Loading checkpoint shards: 100%|██████████| 4/4 [01:11<00:00, 14.87s/it]Loading checkpoint shards: 100%|██████████| 4/4 [01:11<00:00, 17.89s/it]
+Using a slow image processor as `use_fast` is unset and a slow processor was saved with this model. `use_fast=True` will be the default behavior in v4.52, even if the model was saved with a slow processor. This will result in minor differences in outputs. You'll still be able to use a slow processor with `use_fast=False`.

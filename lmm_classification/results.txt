@@ -1,0 +1,36 @@
+llava_ov-qwen2-7b
+atypical:
+=== Overall ===
+Micro P/R/F1: 0.9586 / 0.4198 / 0.5839
+Macro P/R/F1: 0.8558 / 0.4345 / 0.5444
+Macro mAP (bin-scores): 0.4641
+
+typical:
+=== Overall ===
+Micro P/R/F1: 0.9647 / 0.4243 / 0.5894
+Macro P/R/F1: 0.8381 / 0.4414 / 0.5418
+Macro mAP (bin-scores): 0.4865
+
+val2017:
+Micro P/R/F1: 0.9690 / 0.5411 / 0.6944
+Macro P/R/F1: 0.9175 / 0.5565 / 0.6561
+Macro mAP (bin-scores): 0.5525
+
+llava_ov-qwen2-0.5b
+atypical:
+=== Overall ===
+Micro P/R/F1: 0.7694 / 0.5465 / 0.6391
+Macro P/R/F1: 0.7192 / 0.5123 / 0.5655
+Macro mAP (bin-scores): 0.4409
+
+typical:
+Micro P/R/F1: 0.8070 / 0.5646 / 0.6644
+Macro P/R/F1: 0.7307 / 0.5365 / 0.5885
+Macro mAP (bin-scores): 0.4882
+
+val2017:
+Micro P/R/F1: 0.7450 / 0.6408 / 0.6890
+Macro P/R/F1: 0.7082 / 0.6361 / 0.6449
+Macro mAP (bin-scores): 0.4945
+
+
